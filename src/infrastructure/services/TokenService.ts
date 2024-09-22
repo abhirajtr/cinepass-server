@@ -10,7 +10,7 @@ export class TokenService implements ITokenService {
     }
 
     generateAccessToken(userId: string, email: string, role: string): string {
-        return jwt.sign({ userId, email, role }, this.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+        return jwt.sign({ userId, email, role }, this.ACCESS_TOKEN_SECRET, { expiresIn: '1m' });
     }
     generateRefreshToken(userId: string, email: string, role: string): string {
         return jwt.sign({ userId, email, role }, this.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });

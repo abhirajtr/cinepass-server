@@ -1,4 +1,6 @@
+import { GetUserDetailsUserUseCase } from "../use-cases/user/GetUserDetailsUserUseCase";
 import { LoginUserUseCase } from "../use-cases/user/LoginUserUseCase";
+import { RefreshTokenUseCase } from "../use-cases/user/RefreshTokenUseCase";
 import { ResendOtpUserUseCase } from "../use-cases/user/ResndOtpUserUseCase";
 import { SignupUserUseCase } from "../use-cases/user/SignupUserUseCase";
 import { VerifyAndSignupUserUseCase } from "../use-cases/user/VerifyAndSignupUserUseCase";
@@ -27,7 +29,7 @@ export class DIContainer {
     private static getMailService() {
         return this._mailService;
     }
-    private static getTokenService() {
+    public static getTokenService() {
         return this._tokenService;
     }
 
@@ -42,5 +44,11 @@ export class DIContainer {
     }
     public static getLoginUserUseCase() {
         return new LoginUserUseCase(this.getUserRepository(), this.getPasswordHashingService(), this.getTokenService());
+    }
+    public static getGetUserDetailsUserUseCase() {
+        return new GetUserDetailsUserUseCase(this.getUserRepository());
+    }
+    public static getRefreshTokenUseCase() {
+        return new RefreshTokenUseCase(this.getTokenService());
     }
 }

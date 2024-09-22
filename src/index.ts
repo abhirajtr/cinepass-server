@@ -18,7 +18,10 @@ app.use(cors({
     credentials: true  // Enable sending cookies
 }));
 app.use(cookieParser());
-
+app.use((req, res, next) => {
+    console.log(req.method, req.path);
+    next();
+})
 
 app.use("/user", userRoutes);
 app.use(globalErrorHandler);
