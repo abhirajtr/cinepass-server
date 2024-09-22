@@ -5,6 +5,7 @@ export class UserController {
     private signupUseCase = DIContainer.getUserSignupUseCase();
     private verifyAndSignupUseCase = DIContainer.getUserVerifyAndSignupUseCase();
     private resendOtpUseCase = DIContainer.getResendOtpUserUseCase();
+    private loginUseCase = DIContainer.getLoginUserUseCase();
 
     async signup(req: Request, res: Response, next: NextFunction) {
         const { email, phone, password } = req.body;
@@ -34,6 +35,18 @@ export class UserController {
         try {
             await this.resendOtpUseCase.execute(email);
             res.status(200).json({ message: 'Resend otp success' });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async login(req: Request, res: Response, next: NextFunction) {
+        const { email, password } = req.body;
+
+        try {
+            const { accessToken, refreshToken } = await this.loginUseCase.execute(email, password);
+            res.cookie('refreshToken', refreshToken, { maxAge: 7 * 60 * 60 * 1000, httpOnly: true, sameSite: 'none', secure: false });
+            res.status(200).json({ accessToken, message: 'Login success' });
         } catch (error) {
             next(error);
         }

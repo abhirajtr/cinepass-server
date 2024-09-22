@@ -1,6 +1,7 @@
 import express from "express";
 import connectDB from "./infrastructure/database/db";
 import cors from "cors"
+import cookieParser from "cookie-parser";
 import { configDotenv } from "dotenv";
 configDotenv();
 import { globalErrorHandler } from "./interface/globalErrorHandler";
@@ -12,7 +13,11 @@ connectDB();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:4000',  // Your client URL
+    credentials: true  // Enable sending cookies
+}));
+app.use(cookieParser());
 
 
 app.use("/user", userRoutes);
