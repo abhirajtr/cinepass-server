@@ -6,6 +6,7 @@ export interface IUserData {
     isBlocked: boolean;
     createdAt: Date;
     updatedAt: Date;
+    username?: string;
 }
 export interface IRedisService {
     storeOTP(email: string, otp: string, expiry: number): Promise<void>;

@@ -26,7 +26,8 @@ export class VerifyAndSignupUserUseCase {
         
         await this.userRepository.createUser({
             ...user,
-            phone: user.phone as string
+            phone: user.phone as string,
+            username: user.username as string,
         });
         await this.redisService.deleteUserFromRedis(email);
     }

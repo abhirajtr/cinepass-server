@@ -29,7 +29,8 @@ export class SignupUserUseCase {
             hashedPasssword,
             false,
             new Date(),
-            new Date()
+            new Date(),
+            ""
         );
         const otp = generateOtp();
         await this.mailService.sendVerificationEmail(email, otp);

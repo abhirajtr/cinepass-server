@@ -8,6 +8,7 @@ interface IUser extends Document {
     isBlocked: boolean;
     createdAt: Date;
     updatedAt: Date;
+    username: string;
 }
 
 const UserSchema: Schema = new Schema({
@@ -42,6 +43,10 @@ const UserSchema: Schema = new Schema({
         type: Date,
         default: Date.now,
     },
+    username: {
+        type: String,
+        default: ""
+    }
 });
 
 UserSchema.pre<IUser>('save', function (next) {

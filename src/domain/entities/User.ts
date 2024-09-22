@@ -7,5 +7,6 @@ export class User {
         public isBlocked: boolean,
         public readonly createdAt: Date = new Date(),
         public updatedAt: Date,
+        public username: string,
     ) {}
 }

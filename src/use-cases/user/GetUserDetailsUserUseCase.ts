@@ -5,6 +5,7 @@ import { IUserRepository } from "../../domain/interfaces/IUserRepository";
 interface userDetails {
     email: string;
     phone: string;
+    username: string;
 }
 
 export class GetUserDetailsUserUseCase {
@@ -14,7 +15,7 @@ export class GetUserDetailsUserUseCase {
 
     async execute(userId: string): Promise<userDetails> {
         const user = await this.userRepository.findUserById(userId) as userDetails;
-        const { email, phone } = user;
-        return { email, phone };
+        const { email, phone, username } = user;
+        return { email, phone, username };
     }
 }
