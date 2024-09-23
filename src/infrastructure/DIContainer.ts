@@ -1,3 +1,4 @@
+import { LoginAdminUseCase } from "../use-cases/admin/LoginAdminUseCase";
 import { ForgotPasswordUserUseCase } from "../use-cases/user/ForgotPasswordUserUseCase";
 import { GetUserDetailsUserUseCase } from "../use-cases/user/GetUserDetailsUserUseCase";
 import { LoginUserUseCase } from "../use-cases/user/LoginUserUseCase";
@@ -9,6 +10,7 @@ import { UpdateDetailsUserUseCase } from "../use-cases/user/UpdateDetailsUserUse
 import { UpdatePasswordUserUseCase } from "../use-cases/user/UpdatePasswordUserUseCase";
 import { VerifyAndSignupUserUseCase } from "../use-cases/user/VerifyAndSignupUserUseCase";
 import { VerifyOtpUserUseCase } from "../use-cases/user/VerifyOtpUserUseCase";
+import { AdminRepository } from "./repositories/AdminRepository";
 import { UserRepository } from "./repositories/UserRepository"
 import { MailService } from "./services/MailService";
 import { PasswordHashingService } from "./services/PasswordHashingService";
@@ -21,6 +23,7 @@ export class DIContainer {
     private static _redisService = new RedisService();
     private static _mailService = new MailService();
     private static _tokenService = new TokenService();
+    private static _adminRepository = new AdminRepository();
 
     private static getUserRepository() {
         return this._userRepository;
@@ -37,7 +40,9 @@ export class DIContainer {
     public static getTokenService() {
         return this._tokenService;
     }
-
+    private static getAdminRepository() {
+        return this._adminRepository;
+    }
     public static getUserSignupUseCase() {
         return new SignupUserUseCase(this.getUserRepository(), this.getPasswordHashingService(), this.getMailService(), this.getRedisService());
     }
@@ -70,5 +75,8 @@ export class DIContainer {
     }
     public static getResetPasswordUserUseCase() {
         return new ResetPasswordUserUseCase(this.getUserRepository(), this.getPasswordHashingService());
+    }
+    public static getLoginAdminUseCase() {
+        return new LoginAdminUseCase(this.getAdminRepository(), this.getPasswordHashingService(), this.getTokenService());
     }
 }
