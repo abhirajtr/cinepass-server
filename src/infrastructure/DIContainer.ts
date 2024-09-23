@@ -3,6 +3,8 @@ import { LoginUserUseCase } from "../use-cases/user/LoginUserUseCase";
 import { RefreshTokenUseCase } from "../use-cases/user/RefreshTokenUseCase";
 import { ResendOtpUserUseCase } from "../use-cases/user/ResndOtpUserUseCase";
 import { SignupUserUseCase } from "../use-cases/user/SignupUserUseCase";
+import { UpdateDetailsUserUseCase } from "../use-cases/user/UpdateDetailsUserUseCase";
+import { UpdatePasswordUserUseCase } from "../use-cases/user/UpdatePasswordUserUseCase";
 import { VerifyAndSignupUserUseCase } from "../use-cases/user/VerifyAndSignupUserUseCase";
 import { UserRepository } from "./repositories/UserRepository"
 import { MailService } from "./services/MailService";
@@ -50,5 +52,11 @@ export class DIContainer {
     }
     public static getRefreshTokenUseCase() {
         return new RefreshTokenUseCase(this.getTokenService());
+    }
+    public static getUpdateDetailsUserUseCase() {
+        return new UpdateDetailsUserUseCase(this.getUserRepository());
+    }
+    public static getUpdatePasswordUserUseCase() {
+        return new UpdatePasswordUserUseCase(this.getUserRepository(), this.getPasswordHashingService());
     }
 }

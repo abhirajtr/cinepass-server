@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { DIContainer } from "../../infrastructure/DIContainer";
 import { CustomRequest } from "../middlewares/jwtAuthMiddleware";
+import { UnprocessableEntityError } from "../../domain/errors/UnprocessableEntityError";
 
 export class UserController {
     private signupUseCase = DIContainer.getUserSignupUseCase();
@@ -9,6 +10,8 @@ export class UserController {
     private loginUseCase = DIContainer.getLoginUserUseCase();
     private getUserDetailsUseCase = DIContainer.getGetUserDetailsUserUseCase();
     private refreshTokenUseCase = DIContainer.getRefreshTokenUseCase();
+    private updateDetailsUseCase = DIContainer.getUpdateDetailsUserUseCase();
+    private updatePasswordUseCase = DIContainer.getUpdatePasswordUserUseCase();
 
     async signup(req: Request, res: Response, next: NextFunction) {
         const { email, phone, password } = req.body;
@@ -75,6 +78,42 @@ export class UserController {
         try {
             const accessToken = await this.refreshTokenUseCase.execute(refreshToken);
             res.status(200).json({ accessToken });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async updateDetails(req: CustomRequest, res: Response, next: NextFunction) {
+        const { userId } = req;
+        const { phone: oldPhone, username: oldUsername } = req.body;
+        try {
+            const updatedData = await this.updateDetailsUseCase.execute(userId!, oldPhone, oldUsername);
+            res.status(200).json({ message: "updated success", updatedData });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async updatePassword(req: CustomRequest, res: Response, next: NextFunction) {
+        const { userId } = req;
+        const { oldPassword, newPassword, confirmPassword } = req.body;
+        console.log(oldPassword, newPassword, confirmPassword);
+        
+        try {
+            if (!oldPassword || oldPassword.length < 8) {
+                throw new UnprocessableEntityError("Old password must be at least 8 characters long.");
+            }
+            if (!newPassword || newPassword.length < 8) {
+                throw new UnprocessableEntityError("New password must be at least 8 characters long.");
+            }
+            if (newPassword !== confirmPassword) {
+                throw new UnprocessableEntityError("New password and confirmation password do not match.");
+            }
+            if (oldPassword === newPassword) {
+                throw new UnprocessableEntityError("New password cannot be the same as the old password.");
+            }
+            await this.updatePasswordUseCase.execute(userId!, oldPassword, newPassword);
+            res.status(200).json({ message: 'Password updated success' });
         } catch (error) {
             next(error);
         }
