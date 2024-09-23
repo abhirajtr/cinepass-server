@@ -40,4 +40,15 @@ export class UserRepository implements IUserRepository {
         }
         return updateduser;
     }
+
+    async updateUserByEmail(email: string, updatedData: Partial<User>): Promise<User | null> {
+        const updateduser = await UserModel.findOneAndUpdate({ email },
+            { $set: updatedData },
+            { new: true }
+        );
+        if (!updatedData) {
+            return null;
+        }
+        return updateduser;
+    }
 }

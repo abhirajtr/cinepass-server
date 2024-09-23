@@ -12,6 +12,9 @@ export class UserController {
     private refreshTokenUseCase = DIContainer.getRefreshTokenUseCase();
     private updateDetailsUseCase = DIContainer.getUpdateDetailsUserUseCase();
     private updatePasswordUseCase = DIContainer.getUpdatePasswordUserUseCase();
+    private forgotPasswordUseCase = DIContainer.getForgotPasswordUserUseCase();
+    private verifyOtpUseCase = DIContainer.getVerifyOtpUserUseCase();
+    private resetPasswordUseCase = DIContainer.getResetPasswordUserUseCase();
 
     async signup(req: Request, res: Response, next: NextFunction) {
         const { email, phone, password } = req.body;
@@ -98,7 +101,7 @@ export class UserController {
         const { userId } = req;
         const { oldPassword, newPassword, confirmPassword } = req.body;
         console.log(oldPassword, newPassword, confirmPassword);
-        
+
         try {
             if (!oldPassword || oldPassword.length < 8) {
                 throw new UnprocessableEntityError("Old password must be at least 8 characters long.");
@@ -118,4 +121,50 @@ export class UserController {
             next(error);
         }
     }
+
+    async forgotPassword(req: Request, res: Response, next: NextFunction) {
+        const { email } = req.body;
+        try {
+            if (!email) {
+                throw new UnprocessableEntityError('Email is required');
+            }
+            await this.forgotPasswordUseCase.execute(email);
+            res.status(200).json({ message: "An OTP has been sent to your email. Please check your inbox." });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async forgotPasswordVerfiyOtp(req: Request, res: Response, next: NextFunction) {
+        const { email, otp } = req.body;
+        try {
+            if (!email || !otp) {
+                throw new UnprocessableEntityError('email and otp is required');
+            }
+            await this.verifyOtpUseCase.execute(email, otp);
+            res.status(200).json({ message: "OTP verified success" });
+        } catch (error) {
+            next(error);
+        }
+    }
+    async resetUserPassword(req: Request, res: Response, next: NextFunction) {
+        const { email, password, confirmPassword } = req.body;
+        console.log('fields:', email, password, confirmPassword);
+        try {
+            if (!email || !password || !confirmPassword) {
+                throw new UnprocessableEntityError('Email, password, and confirmPassword are required');
+            }
+            if (password.length < 8) {
+                throw new UnprocessableEntityError('Password must be at least 8 characters long');
+            }
+            if (password !== confirmPassword) {
+                throw new UnprocessableEntityError('Password and confirmPassword do not match');
+            }
+            await this.resetPasswordUseCase.execute(email, password);
+            res.status(200).json({ message: 'success' });
+        } catch (error) {
+            next(error);
+        }
+    }
+
 }

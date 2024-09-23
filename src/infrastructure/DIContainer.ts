@@ -1,11 +1,14 @@
+import { ForgotPasswordUserUseCase } from "../use-cases/user/ForgotPasswordUserUseCase";
 import { GetUserDetailsUserUseCase } from "../use-cases/user/GetUserDetailsUserUseCase";
 import { LoginUserUseCase } from "../use-cases/user/LoginUserUseCase";
 import { RefreshTokenUseCase } from "../use-cases/user/RefreshTokenUseCase";
+import { ResetPasswordUserUseCase } from "../use-cases/user/ResetPasswordUserUseCase";
 import { ResendOtpUserUseCase } from "../use-cases/user/ResndOtpUserUseCase";
 import { SignupUserUseCase } from "../use-cases/user/SignupUserUseCase";
 import { UpdateDetailsUserUseCase } from "../use-cases/user/UpdateDetailsUserUseCase";
 import { UpdatePasswordUserUseCase } from "../use-cases/user/UpdatePasswordUserUseCase";
 import { VerifyAndSignupUserUseCase } from "../use-cases/user/VerifyAndSignupUserUseCase";
+import { VerifyOtpUserUseCase } from "../use-cases/user/VerifyOtpUserUseCase";
 import { UserRepository } from "./repositories/UserRepository"
 import { MailService } from "./services/MailService";
 import { PasswordHashingService } from "./services/PasswordHashingService";
@@ -58,5 +61,14 @@ export class DIContainer {
     }
     public static getUpdatePasswordUserUseCase() {
         return new UpdatePasswordUserUseCase(this.getUserRepository(), this.getPasswordHashingService());
+    }
+    public static getForgotPasswordUserUseCase() {
+        return new ForgotPasswordUserUseCase(this.getUserRepository(), this.getMailService(), this.getRedisService());
+    }
+    public static getVerifyOtpUserUseCase() {
+        return new VerifyOtpUserUseCase(this.getRedisService());
+    }
+    public static getResetPasswordUserUseCase() {
+        return new ResetPasswordUserUseCase(this.getUserRepository(), this.getPasswordHashingService());
     }
 }

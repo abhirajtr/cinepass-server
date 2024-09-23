@@ -8,4 +8,5 @@ export interface IUserRepository {
     updateUser(userId: string, updatedData: Partial<User>): Promise<User | null>;
     userExistsByEmail(email: string): Promise<boolean>;
     getAllUsers(): Promise<User[]>;
+    updateUserByEmail(email: string, updatedData: Partial<User>): Promise<User | null>;
 }

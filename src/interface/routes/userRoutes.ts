@@ -14,5 +14,9 @@ router.get("/profile", jwtAuthMiddleware("user"), (req, res, next) => userContro
 router.post("/refresh-token", (req, res, next) => userController.refreshToken(req, res, next));
 router.put("/update-details", jwtAuthMiddleware("user"), (req, res, next) => userController.updateDetails(req, res, next));
 router.put("/update-password", jwtAuthMiddleware("user"), (req, res, next) => userController.updatePassword(req, res, next));
+router.post("/forgot-password", (req, res, next) => userController.forgotPassword(req, res, next));
+router.post("/forgot-password/verify-otp", (req, res, next) => userController.forgotPasswordVerfiyOtp(req, res, next));
+router.post("/password-reset", (req, res, next) => userController.resetUserPassword(req, res, next));
+
 
 export { router as userRoutes };

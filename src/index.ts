@@ -6,6 +6,7 @@ import { configDotenv } from "dotenv";
 configDotenv();
 import { globalErrorHandler } from "./interface/globalErrorHandler";
 import { userRoutes } from "./interface/routes/userRoutes";
+import { notFoundMiddleware } from "./interface/middlewares/notFoundMiddleware";
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use((req, res, next) => {
 })
 
 app.use("/user", userRoutes);
+app.use(notFoundMiddleware)
 app.use(globalErrorHandler);
 
 const PORT = process.env.PORT;
