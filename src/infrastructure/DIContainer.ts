@@ -1,3 +1,5 @@
+import { BlockUserAdminUseCase } from "../use-cases/admin/BlockUserAdminUseCase";
+import { GetAllUsersAdminUseCase } from "../use-cases/admin/GetAllUsersAdminUseCase";
 import { LoginAdminUseCase } from "../use-cases/admin/LoginAdminUseCase";
 import { ForgotPasswordUserUseCase } from "../use-cases/user/ForgotPasswordUserUseCase";
 import { GetUserDetailsUserUseCase } from "../use-cases/user/GetUserDetailsUserUseCase";
@@ -78,5 +80,11 @@ export class DIContainer {
     }
     public static getLoginAdminUseCase() {
         return new LoginAdminUseCase(this.getAdminRepository(), this.getPasswordHashingService(), this.getTokenService());
+    }
+    public static getAllUsersAdminUseCase() {
+        return new GetAllUsersAdminUseCase(this.getUserRepository());
+    }
+    public static getBlockUserAdminUseCase() {
+        return new BlockUserAdminUseCase(this.getUserRepository());
     }
 }

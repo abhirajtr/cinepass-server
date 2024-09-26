@@ -6,5 +6,6 @@ const router = Router();
 const adminController = new AdminController();
 
 router.post("/login", (req, res, next) => adminController.login(req, res, next));
-
+router.get("/users", (req, res, next) => adminController.getAllUsers(req, res, next));
+router.patch("/users/:userId/block", (req, res, next) => adminController.blockUser(req, res, next));
 export { router as adminRoutes };

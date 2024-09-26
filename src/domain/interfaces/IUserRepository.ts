@@ -7,6 +7,9 @@ export interface IUserRepository {
     findUserByPhone(phone: string): Promise<User | null>;
     updateUser(userId: string, updatedData: Partial<User>): Promise<User | null>;
     userExistsByEmail(email: string): Promise<boolean>;
-    getAllUsers(): Promise<User[]>;
+    // getAllUsers(skip?: number, limit?: number): Promise<User[]>;
     updateUserByEmail(email: string, updatedData: Partial<User>): Promise<User | null>;
+    // getUsersCount(): Promise<number>;
+    getAllUsers(skip?: number, limit?: number, searchTerm?: string): Promise<User[]>;
+    getUsersCount(searchTerm?: string): Promise<number>;
 }

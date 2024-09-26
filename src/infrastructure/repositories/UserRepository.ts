@@ -26,10 +26,14 @@ export class UserRepository implements IUserRepository {
         const user = await UserModel.findOne({ email });
         return user !== null;
     }
-    async getAllUsers(): Promise<User[]> {
-        const users = await UserModel.find();
-        return users;
-    }
+    // async getAllUsers(skip?: number, limit?: number): Promise<User[]> {
+    //     const users = await UserModel.find().skip(skip!).limit(limit!);
+    //     return users;
+    // }
+    // async getAllUsers(): Promise<User[]> {
+    //     const users = await UserModel.find();
+    //     return users;
+    // }
     async updateUser(userId: string, updatedData: Partial<User>): Promise<User | null> {
         const updateduser = await UserModel.findOneAndUpdate({ userId },
             { $set: updatedData },
@@ -50,5 +54,29 @@ export class UserRepository implements IUserRepository {
             return null;
         }
         return updateduser;
+    }
+    // async getUsersCount(): Promise<number> {
+    //     return await UserModel.countDocuments();
+    // }
+
+    async getAllUsers(skip: number = 0, limit: number = 10, searchTerm: string = ""): Promise<User[]> {
+        const searchRegex = new RegExp(searchTerm, 'i');        
+        const users = await UserModel.find({
+            $or: [
+                { username: searchRegex},
+                { email: searchRegex },
+            ]
+        }).skip(skip).limit(limit);
+        return users;
+    }
+    async getUsersCount(searchTerm: string = ""): Promise<number> {
+        const searchRegex = new RegExp(searchTerm);
+        const count = await UserModel.countDocuments({
+            $or: [
+                { username: searchRegex },
+                { email: searchRegex },
+            ]
+        });
+        return count;
     }
 }
