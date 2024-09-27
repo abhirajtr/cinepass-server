@@ -7,6 +7,8 @@ export interface IUserData {
     createdAt: Date;
     updatedAt: Date;
     username?: string;
+    location?: string;
+    name?: string;
 }
 export interface IRedisService {
     storeOTP(email: string, otp: string, expiry: number): Promise<void>;

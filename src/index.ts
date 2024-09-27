@@ -8,6 +8,7 @@ import { globalErrorHandler } from "./interface/globalErrorHandler";
 import { userRoutes } from "./interface/routes/userRoutes";
 import { notFoundMiddleware } from "./interface/middlewares/notFoundMiddleware";
 import { adminRoutes } from "./interface/routes/adminRoutes";
+import { theatreRoutes } from "./interface/routes/TheatreRoutes";
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use((req, res, next) => {
 
 app.use("/user", userRoutes);
 app.use("/admin", adminRoutes);
+app.use("/theatre", theatreRoutes);
 app.use(notFoundMiddleware)
 app.use(globalErrorHandler);
 

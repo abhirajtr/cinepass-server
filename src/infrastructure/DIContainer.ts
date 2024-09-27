@@ -1,6 +1,7 @@
 import { BlockUserAdminUseCase } from "../use-cases/admin/BlockUserAdminUseCase";
 import { GetAllUsersAdminUseCase } from "../use-cases/admin/GetAllUsersAdminUseCase";
 import { LoginAdminUseCase } from "../use-cases/admin/LoginAdminUseCase";
+import { SignupTheatreUseCase } from "../use-cases/theatre/SignupTheatreUseCase";
 import { ForgotPasswordUserUseCase } from "../use-cases/user/ForgotPasswordUserUseCase";
 import { GetUserDetailsUserUseCase } from "../use-cases/user/GetUserDetailsUserUseCase";
 import { LoginUserUseCase } from "../use-cases/user/LoginUserUseCase";
@@ -13,6 +14,7 @@ import { UpdatePasswordUserUseCase } from "../use-cases/user/UpdatePasswordUserU
 import { VerifyAndSignupUserUseCase } from "../use-cases/user/VerifyAndSignupUserUseCase";
 import { VerifyOtpUserUseCase } from "../use-cases/user/VerifyOtpUserUseCase";
 import { AdminRepository } from "./repositories/AdminRepository";
+import { TheatreRepository } from "./repositories/TheatreRepository";
 import { UserRepository } from "./repositories/UserRepository"
 import { MailService } from "./services/MailService";
 import { PasswordHashingService } from "./services/PasswordHashingService";
@@ -26,6 +28,7 @@ export class DIContainer {
     private static _mailService = new MailService();
     private static _tokenService = new TokenService();
     private static _adminRepository = new AdminRepository();
+    private static _theatreRepository = new TheatreRepository();
 
     private static getUserRepository() {
         return this._userRepository;
@@ -86,5 +89,11 @@ export class DIContainer {
     }
     public static getBlockUserAdminUseCase() {
         return new BlockUserAdminUseCase(this.getUserRepository());
+    }
+    private static getTheatreRepository() {
+        return this._theatreRepository;
+    }
+    public static getSignupTheatreUseCase() {
+        return new SignupTheatreUseCase(this.getTheatreRepository(), this.getPasswordHashingService(), this.getMailService(), this.getRedisService());
     }
 }
