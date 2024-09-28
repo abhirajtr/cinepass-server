@@ -1,6 +1,7 @@
 import { BlockUserAdminUseCase } from "../use-cases/admin/BlockUserAdminUseCase";
 import { GetAllUsersAdminUseCase } from "../use-cases/admin/GetAllUsersAdminUseCase";
 import { LoginAdminUseCase } from "../use-cases/admin/LoginAdminUseCase";
+import { LoginTheatreUseCase } from "../use-cases/theatre/LoginTheatreUseCase";
 import { SignupTheatreUseCase } from "../use-cases/theatre/SignupTheatreUseCase";
 import { ForgotPasswordUserUseCase } from "../use-cases/user/ForgotPasswordUserUseCase";
 import { GetUserDetailsUserUseCase } from "../use-cases/user/GetUserDetailsUserUseCase";
@@ -95,5 +96,8 @@ export class DIContainer {
     }
     public static getSignupTheatreUseCase() {
         return new SignupTheatreUseCase(this.getTheatreRepository(), this.getPasswordHashingService(), this.getMailService(), this.getRedisService());
+    }
+    public static getLoginTheatreUseCase() {
+        return new LoginTheatreUseCase(this.getTheatreRepository(), this.getPasswordHashingService(), this.getTokenService());
     }
 }

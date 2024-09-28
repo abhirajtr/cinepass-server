@@ -4,6 +4,7 @@ import { UnprocessableEntityError } from "../../domain/errors/UnprocessableEntit
 
 export class TheatreController {
     private theatreSignup = DIContainer.getSignupTheatreUseCase();
+    private theatreLogin = DIContainer.getLoginTheatreUseCase();
 
     async signup(req: Request, res: Response, next: NextFunction) {
         const { name, email, phone, location, password, confirmPassword } = req.body;
@@ -39,6 +40,20 @@ export class TheatreController {
         try {
             await this.theatreSignup.ResendOtp(email);
             res.status(200).json({ message: 'OTP resend' });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async login(req: Request, res: Response, next: NextFunction) {
+        const { email, password } = req.body;
+        try {
+            if (!email || !password) {
+                throw new UnprocessableEntityError('Email and password are required');
+            }
+            const { accessToken, refreshToken } = await this.theatreLogin.execute(email, password);
+            res.cookie('refreshToken', refreshToken, { maxAge: 7 * 24 * 60 * 60 * 1000, httpOnly: true, sameSite: 'lax', secure: false, path: "/" });
+            res.status(200).json({ accessToken, refreshToken, message: 'Login successful' });
         } catch (error) {
             next(error);
         }
