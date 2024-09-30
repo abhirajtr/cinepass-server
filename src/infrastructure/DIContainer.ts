@@ -1,4 +1,7 @@
+import { ApproveTheatreUseCase } from "../use-cases/admin/ApproveTheatreUseCase";
+import { BlockUnblockTheatreUseCase } from "../use-cases/admin/BlockUnblockTheatreUseCase";
 import { BlockUserAdminUseCase } from "../use-cases/admin/BlockUserAdminUseCase";
+import { GetAllTheatres } from "../use-cases/admin/GetAllTheatres";
 import { GetAllUsersAdminUseCase } from "../use-cases/admin/GetAllUsersAdminUseCase";
 import { LoginAdminUseCase } from "../use-cases/admin/LoginAdminUseCase";
 import { LoginTheatreUseCase } from "../use-cases/theatre/LoginTheatreUseCase";
@@ -99,5 +102,14 @@ export class DIContainer {
     }
     public static getLoginTheatreUseCase() {
         return new LoginTheatreUseCase(this.getTheatreRepository(), this.getPasswordHashingService(), this.getTokenService());
+    }
+    public static getGetAllTheatresUseCase() {
+        return new GetAllTheatres(this.getTheatreRepository());
+    }
+    public static getApproveTheatreUseCase() {
+        return new ApproveTheatreUseCase(this.getTheatreRepository());
+    }
+    public static getBlockUnblockTheatreUseCase() {
+        return new BlockUnblockTheatreUseCase(this.getTheatreRepository());
     }
 }

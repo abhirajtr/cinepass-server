@@ -8,7 +8,7 @@ import { globalErrorHandler } from "./interface/globalErrorHandler";
 import { userRoutes } from "./interface/routes/userRoutes";
 import { notFoundMiddleware } from "./interface/middlewares/notFoundMiddleware";
 import { adminRoutes } from "./interface/routes/adminRoutes";
-import { theatreRoutes } from "./interface/routes/TheatreRoutes";
+import { theatreRoutes } from "./interface/routes/theatreRoutes";
 
 const app = express();
 
@@ -17,8 +17,8 @@ connectDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-    origin: 'http://localhost:4000',  // Your client URL
-    credentials: true  // Enable sending cookies
+    origin: 'http://localhost:4000',
+    credentials: true
 }));
 app.use(cookieParser());
 app.use((req, res, next) => {

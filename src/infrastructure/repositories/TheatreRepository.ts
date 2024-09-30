@@ -17,24 +17,43 @@ export class TheatreRepository implements ITheatreRepository {
         return theatre;
     }
     async updateTheatreById(theatreId: string, updatedData: Partial<Theatre>): Promise<Theatre | null> {
-        const updatedTheatre = await TheatreModel.findOneAndUpdate({ theatreId }, {
-            set: {
-                updatedData
-            }
-        });
-        return updatedTheatre;
+        const updatedTheatre = await TheatreModel.findOneAndUpdate(
+            { theatreId },
+            { $set: updatedData },
+            { new: true }
+        );        
+        return updatedTheatre
     }
     async updateTheatreByEmail(email: string, updatedData: Partial<Theatre>): Promise<Theatre | null> {
-        const updatedTheatre = await TheatreModel.findOneAndUpdate({ email }, {
-            set: {
-                updatedData
-            }
-        });
+        const updatedTheatre = await TheatreModel.findOneAndUpdate(
+            { email },
+            { $set: updatedData },
+            { new: true }
+        );
         return updatedTheatre;
     }
 
     async findTheatreByPhone(phone: string): Promise<Theatre | null> {
         return await TheatreModel.findOne({ phone });
     }
+    async getAllTheatres(skip: number = 0, limit: number = 10, searchTerm: string = ""): Promise<Theatre[]> {
+        const searchRegex = new RegExp(searchTerm);
+        return await TheatreModel.find({
+            $or: [
+                { name: searchRegex },
+                { email: searchRegex },
+            ]
+        }).sort({ createdAt: -1 }).skip(skip).limit(limit);
+    }
 
+    async getTheatresCount(searchTerm: string): Promise<number> {
+        const searchRegex = new RegExp(searchTerm);
+        const count = await TheatreModel.countDocuments({
+            $or: [
+                { name: searchRegex },
+                { email: searchRegex },
+            ]
+        });
+        return count;
+    }
 }
