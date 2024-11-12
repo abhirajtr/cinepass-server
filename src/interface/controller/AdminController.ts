@@ -8,8 +8,9 @@ export class AdminController {
 
     async getAllUsersByType(req: Request, res: Response, next: NextFunction, role: UserRole) {
         try {
-            const { search = "", isBlocked = "", userRole = "" } = req.query;
-            const { users, totalCount } = await this.getAllUsersByTypeUseCase.execute(search as string, isBlocked as boolean | "", userRole as UserRole);
+            const { search = "", isBlocked = "", userRole = "", limit = 10, currentPage = 1 } = req.query;
+            const skip = (Number(currentPage) - 1) * Number(limit);
+            const { users, totalCount } = await this.getAllUsersByTypeUseCase.execute(search as string, isBlocked as boolean | "", userRole as UserRole, skip, Number(limit));
             res.status(200).json({ users, totalCount });
         } catch (error) {
             next(error);

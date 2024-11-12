@@ -9,5 +9,5 @@ export interface IUserRepository {
     updateByEmail(email: string, user: Partial<User>): Promise<User>;
     delete(id: string): Promise<void>;
     findAll(): Promise<User[]>;
-    findAllUsers(search: string, isBlocked: boolean | "", userRole: UserRole): Promise<{ users: User[], totalCount: number }>;
+    findAllUsers(search: string, isBlocked: boolean | "", userRole: UserRole, skip: number, limit: number): Promise<{ users: User[], totalCount: number }>;
 }

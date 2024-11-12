@@ -14,10 +14,10 @@ export class GetAllUsersByTypeUseCase {
         private userRepository: IUserRepository
     ) { }
 
-    async execute(search: string, isBlocked: boolean | "", userRole: UserRole): Promise<{ users: IUser[], totalCount: number }> {
+    async execute(search: string, isBlocked: boolean | "", userRole: UserRole, skip: number, limit: number): Promise<{ users: IUser[], totalCount: number }> {
         // console.log(search, isBlocked, userRole);
 
-        const { users, totalCount } = await this.userRepository.findAllUsers(search, isBlocked, userRole);
+        const { users, totalCount } = await this.userRepository.findAllUsers(search, isBlocked, userRole, skip, limit);
         return { users, totalCount };
     }
 }

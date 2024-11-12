@@ -51,7 +51,7 @@ export class UserRepository implements IUserRepository {
     // async findAllUsers(se): Promise<User[]> {
     //     return await UserModel.find({ role: userRole });
     // }
-    async findAllUsers(search: string, isBlocked: boolean | "", userRole: UserRole): Promise<{ users: User[], totalCount: number }> {
+    async findAllUsers(search: string, isBlocked: boolean | "", userRole: UserRole, skip: number, limit: number): Promise<{ users: User[], totalCount: number }> {
         const query: any = {};
         if (search) {
             query.$or = [
@@ -69,7 +69,7 @@ export class UserRepository implements IUserRepository {
         }
         // console.log("query:", query);
 
-        const users = await UserModel.find(query);
+        const users = await UserModel.find(query).skip(skip).limit(limit);
         const totalCount = await UserModel.countDocuments(query);
         return { users, totalCount };
     }
