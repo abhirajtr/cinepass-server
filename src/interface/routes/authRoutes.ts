@@ -7,8 +7,8 @@ const router = Router();
 const authController = new AuthController();
 
 
-router.post("/signup/user", (req, res, next) => authController.signup(req, res, next, UserRole.RegularUser));
-router.post("/signup/theatreOwner", (req, res, next) => authController.signup(req, res, next, UserRole.TheatreOwner));
+router.post("/signup/user", (req, res, next) => authController.signup(req, res, next, "regularUser"));
+router.post("/signup/theatreOwner", (req, res, next) => authController.signup(req, res, next, "theatreOwner"));
 router.post("/verify-otp", (req, res, next) => authController.verifyOtp(req, res, next));
 router.post("/signup/resend-otp", (req, res, next) => authController.resendSignupOtp(req, res, next));
 router.post("/login", (req, res, next) => authController.login(req, res, next));

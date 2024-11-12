@@ -1,4 +1,6 @@
+import { BlockUnblockUserByType } from "../useCases/BlockUnblockUserByType";
 import { ForgotPasswordUseCase } from "../useCases/ForgotPasswordUseCase";
+import { GetAllUsersByTypeUseCase } from "../useCases/GetAllUsersByTypeUseCase";
 import { LoginUseCase } from "../useCases/LoginUseCase";
 import { SignupUseCase } from "../useCases/SignupUseCase";
 import { UserRepository } from "./repositories/UserRepository";
@@ -20,6 +22,13 @@ class DIContainer {
     }
     static getForgotPasswordUserUseCase() {
         return new ForgotPasswordUseCase(this.getUserRepository());
+    }
+
+    static getAllUsersByTypeUseCase() {
+        return new GetAllUsersByTypeUseCase(this.getUserRepository());
+    }
+    static getBlockUnblockUserByTypeUseCase() {
+        return new BlockUnblockUserByType(this.getUserRepository());
     }
 }
 

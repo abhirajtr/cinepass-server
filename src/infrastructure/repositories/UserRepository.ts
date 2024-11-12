@@ -1,4 +1,4 @@
-import { User } from "../../domain/entities/User";
+import { User, UserRole } from "../../domain/entities/User";
 import { IUserRepository } from "../../domain/interfaces/IUserRepository";
 import { UserModel } from "../models/UserModel";
 
@@ -32,8 +32,8 @@ export class UserRepository implements IUserRepository {
     }
 
     // Update an existing user by ID
-    async update(id: string, user: Partial<User>): Promise<User> {
-        const updatedUser = await UserModel.findByIdAndUpdate(id, user, { new: true });
+    async updateById(userId: string, user: Partial<User>): Promise<User> {
+        const updatedUser = await UserModel.findOneAndUpdate({ userId }, user, { new: true });
         return updatedUser!;
     }
 
@@ -46,5 +46,31 @@ export class UserRepository implements IUserRepository {
     // Delete a user by ID
     async delete(id: string): Promise<void> {
         await UserModel.findByIdAndDelete(id);
+    }
+
+    // async findAllUsers(se): Promise<User[]> {
+    //     return await UserModel.find({ role: userRole });
+    // }
+    async findAllUsers(search: string, isBlocked: boolean | "", userRole: UserRole): Promise<{ users: User[], totalCount: number }> {
+        const query: any = {};
+        if (search) {
+            query.$or = [
+                { name: { $regex: search, $options: 'i' } },  // Case-insensitive search for name
+                { email: { $regex: search, $options: 'i' } }, // Case-insensitive search for email
+                { phone: { $regex: search, $options: 'i' } }  // Case-insensitive search for phone
+            ];
+        }
+        if (isBlocked !== "") {
+            query.isBlocked = isBlocked;
+        }
+        query.role = { $ne: 'admin' };
+        if (userRole) {
+            query.role = userRole;
+        }
+        // console.log("query:", query);
+
+        const users = await UserModel.find(query);
+        const totalCount = await UserModel.countDocuments(query);
+        return { users, totalCount };
     }
 }

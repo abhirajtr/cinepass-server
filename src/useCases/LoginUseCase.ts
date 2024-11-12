@@ -1,3 +1,4 @@
+import { ForbiddenError } from "../domain/errors/ForbiddenError";
 import { NotFoundError } from "../domain/errors/NotFoundError";
 import { UnauthorizedError } from "../domain/errors/UnauthorizedError";
 import { IUserRepository } from "../domain/interfaces/IUserRepository";
@@ -15,6 +16,8 @@ export class LoginUseCase {
         const isPasswordMatch = await comparePassword(password, user.password);
 
         if (!isPasswordMatch) throw new UnauthorizedError("password Inavalid");
+
+        if (user.isBlocked) throw new ForbiddenError("Your account has been blocked. Please contact support");
 
         const accessToken = generateAccessToken({ email: user.email, userId: user.userId, role: user.role });
         const refreshToken = generateRefreshToken({ email: user.email, userId: user.userId, role: user.role });
