@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 const connectDB = async () => {
     try {
-        const dbURI = process.env.MONGO_URI || 'mongodb://localhost:27017/cinepass';
+        const dbURI = process.env.DB_URL || 'mongodb://localhost:27017/cinepass';
 
         await mongoose.connect(dbURI);
 

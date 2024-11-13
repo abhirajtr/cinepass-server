@@ -21,7 +21,7 @@ export class UserRepository implements IUserRepository {
 
     // Find a user by phone number
     async findByPhoneNumber(phoneNumber: string): Promise<User | null> {
-        return await UserModel.findOne({ phoneNumber });
+        return await UserModel.findOne({ phone: phoneNumber });
     }
 
     // Create a new user

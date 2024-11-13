@@ -31,8 +31,12 @@ export class SignupUseCase {
 
     public async execute(email: string, phone: string, password: string, role: UserRole): Promise<void> {
         const existingUser = await this.userRepository.findByEmail(email);
+        const existingPhone = await this.userRepository.findByPhoneNumber(phone);
         if (existingUser) {
             throw new ConflictError("Email is already in use");
+        }
+        if (existingPhone) {
+            throw new ConflictError("Phone number is already in use");
         }
 
         const otp = generateOtp();

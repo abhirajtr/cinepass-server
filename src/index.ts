@@ -10,6 +10,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import corsConfig from './config/corsConfig';
 import { adminRoutes } from './interface/routes/adminRoutes';
+import { theatreOwnerRoutes } from './interface/routes/theatreOwnerRoutes';
 
 
 
@@ -25,6 +26,7 @@ app.use(express.json());
 app.use(requestLogger);
 app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
+app.use("/theatreOwner", theatreOwnerRoutes);
 app.use(errorHandler);
 
 
