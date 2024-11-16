@@ -1,12 +1,4 @@
-// export enum UserRole {
-//     Admin = 'admin',
-//     TheatreOwner = 'theatreOwner',
-//     RegularUser = 'regularUser',
-// }
-
-export type UserRole = 'admin' | 'theatreOwner' | 'regularUser';
-
-export class User {
+export class TheatreOwner {
     constructor(
         public userId: string,
         public name: string,

@@ -12,6 +12,17 @@ const REFRESH_SECRET = process.env.JWT_ACCESS_SECRET|| "your_refresh_secret";
 const ACCESS_EXPIRATION = "15m";
 const REFRESH_EXPIRATION = "7d";
 
+export function generateResetToken(payload: JwtPayload):string {
+    return jwt.sign(payload, ACCESS_SECRET, { expiresIn: '5m' });
+}
+export function verifyResetToken(token: string): JwtPayload | null {
+    try {
+        return jwt.verify(token, ACCESS_SECRET) as JwtPayload;
+    } catch {
+        return null;
+    }
+}
+
 export function generateAccessToken(payload: JwtPayload): string {
     return jwt.sign(payload, ACCESS_SECRET, { expiresIn: ACCESS_EXPIRATION });
 }

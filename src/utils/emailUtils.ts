@@ -20,8 +20,7 @@ export async function sendEmail(toEmail: string, subject: string, htmlContent: s
         to: toEmail,
         subject: subject,
         html: htmlContent,
-    };
-
+    };    
     try {
         await transporter.sendMail(mailOptions);
         console.log(`Email sent to ${toEmail}`);

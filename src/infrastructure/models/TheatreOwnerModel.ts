@@ -1,8 +1,8 @@
 import mongoose, { Schema } from "mongoose";
-import { User } from "../../domain/entities/User";
+import { TheatreOwner } from "../../domain/entities/TheatreOwner";
 
 
-const UserSchema: Schema = new Schema(
+const TheatreOwnerSchema: Schema = new Schema(
     {
         userId: { type: String, required: true, unique: true },
         name: { type: String },
@@ -16,6 +16,6 @@ const UserSchema: Schema = new Schema(
     { timestamps: true }
 );
 
-const UserModel = mongoose.model<User>("User", UserSchema);
+const TheatreOwnerModel = mongoose.model<TheatreOwner>("TheatreOwner", TheatreOwnerSchema);
 
-export { UserModel };
+export { TheatreOwnerModel };
