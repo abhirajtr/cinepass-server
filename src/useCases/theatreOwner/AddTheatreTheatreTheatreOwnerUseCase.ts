@@ -25,7 +25,7 @@ export class AddTheatreTheatreOwnerUseCase {
         if (existingTheatre) {
             throw new ConflictError("A theatre with the same owner and street address already exists");
         }
-        const newTheatre = await this.theatreRepository.create({ ...theatre, theatreId, isVerified: false });
+        const newTheatre = await this.theatreRepository.create({ ...theatre, theatreId, status: "pending" });
         return newTheatre;
     }
 }

@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import { TheatreStatus } from "../../domain/entities/Theatre";
 
 export interface ITheatre extends Document {
     theatreId: string;
@@ -11,7 +12,7 @@ export interface ITheatre extends Document {
     zipCode: string;
     verificationDocument: string;
     ownerId: string;
-    isVerified: boolean;
+    status: TheatreStatus;
 }
 
 const TheatreSchema: Schema = new Schema(
@@ -26,7 +27,13 @@ const TheatreSchema: Schema = new Schema(
         zipCode: { type: String, required: true },
         verificationDocument: { type: String, required: true },
         ownerId: { type: String, required: true },
-        isVerified: { type: Boolean, required: true },
+        status: {
+            type: String,
+            enum: ["pending", "verified", "rejected"],
+            default: "pending",
+        },
+        rejectionReason: { type: String, default: null },
+
     }, {
     timestamps: true
 }

@@ -1,8 +1,9 @@
+export type TheatreStatus = "pending" | "verified" | "rejected";
 export class Theatre {
     constructor(
         public theatreId: string,
         public theatreName: string,
-        public contactEmail:string,
+        public contactEmail: string,
         public contactNumber: string,
         public streetAddress: string,
         public city: string,
@@ -10,6 +11,7 @@ export class Theatre {
         public zipCode: string,
         public verificationDocument: string,
         public ownerId: string,
-        public isVerified: boolean,
-    ) {}
+        public status: TheatreStatus,
+        public rejectionReason?: string
+    ) { }
 }
