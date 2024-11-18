@@ -8,6 +8,7 @@ export interface IUserRepository {
     updateById(userId: string, user: Partial<User>): Promise<User>;
     updateByEmail(email: string, user: Partial<User>): Promise<User>;
     delete(id: string): Promise<void>;
-    findAll(): Promise<User[]>;
+    findAll(query: object, skip: number, limit: number): Promise<User[]>;
+    findAllCount(query: object): Promise<number>;
     findAllUsers(search: string, isBlocked: boolean | "", userRole: UserRole, skip: number, limit: number): Promise<{ users: User[], totalCount: number }>;
 }

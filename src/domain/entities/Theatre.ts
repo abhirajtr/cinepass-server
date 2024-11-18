@@ -3,7 +3,7 @@ export class Theatre {
         public theatreId: string,
         public theatreName: string,
         public contactEmail:string,
-        public phoneNumber: string,
+        public contactNumber: string,
         public streetAddress: string,
         public city: string,
         public state: string,

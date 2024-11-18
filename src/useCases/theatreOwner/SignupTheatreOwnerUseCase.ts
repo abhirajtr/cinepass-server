@@ -38,7 +38,7 @@ export class SignupTheatreOwnerUseCase {
         const otp = generateOtp();
 
         const newUser = new TheatreOwner(
-            '', // Temporary 
+            '', // Temporary id
             '', // Temporary name
             email,
             phone,
@@ -49,7 +49,7 @@ export class SignupTheatreOwnerUseCase {
 
         const htmlContent = signupEmailContent(otp); //html template
         const subject = "CinePass Signup - OTP Verification";
-        Promise.all([
+        await Promise.all([
             this.storeUserInRedis(email, otp, newUser),
             sendEmail(email, subject, htmlContent)
         ]);
@@ -80,6 +80,8 @@ export class SignupTheatreOwnerUseCase {
 
         const hashedPassword = await hashPassword(userData.password);
 
+        console.log("theatre owner signup userData:", userData);
+        
         // Create a final user object with the hashed password
         const user = new TheatreOwner(
             generateUserId(),

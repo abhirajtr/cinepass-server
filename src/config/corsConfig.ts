@@ -5,7 +5,7 @@ const corsConfig: CorsOptions = {
         ? process.env.FRONTEND_URL
         : 'http://localhost:4000', 
 
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true, // Allow cookies and authorization headers in requests
     maxAge: 600 // Cache the preflight response for faster subsequent requests

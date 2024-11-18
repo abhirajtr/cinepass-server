@@ -4,7 +4,7 @@ export interface ITheatre extends Document {
     theatreId: string;
     theatreName: string;
     contactEmail: string;
-    phoneNumber: string;
+    contactNumber: string;
     streetAddress: string;
     city: string;
     state: string;
@@ -19,7 +19,7 @@ const TheatreSchema: Schema = new Schema(
         theatreId: { type: String, required: true, unique: true },
         theatreName: { type: String, required: true },
         contactEmail: { type: String, required: true },
-        phoneNumber: { type: String, required: true },
+        contactNumber: { type: String, required: true },
         streetAddress: { type: String, required: true },
         city: { type: String, required: true },
         state: { type: String, required: true },

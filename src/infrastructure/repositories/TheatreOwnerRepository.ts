@@ -19,4 +19,11 @@ export class TheatreOwnerRepository implements ITheatreOwnerRepository {
         const updatedUser = await TheatreOwnerModel.findOneAndUpdate({ userId }, user, { new: true });
         return updatedUser!;
     }
+
+    async findAllCount(query: object): Promise<number> {
+        return await TheatreOwnerModel.find(query).countDocuments();
+    }
+    async findAll(query: object, skip: number, limit: number): Promise<TheatreOwner[]> {
+        return await TheatreOwnerModel.find(query).skip(skip).limit(limit);
+    }
 }

@@ -5,8 +5,11 @@ import { UserModel } from "../models/UserModel";
 export class UserRepository implements IUserRepository {
 
     // Find all users
-    async findAll(): Promise<User[]> {
-        return await UserModel.find();
+    async findAllCount(query: object): Promise<number> {
+        return await UserModel.find(query).countDocuments();
+    }
+    async findAll(query: object, skip: number, limit: number): Promise<User[]> {
+        return await UserModel.find(query).skip(skip).limit(limit);
     }
 
     // Find a user by ID

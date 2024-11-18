@@ -5,6 +5,8 @@ export interface ITheatreOwnerRepository {
     findByEmail(email: string): Promise<TheatreOwner | null>;
     findByPhoneNumber(phoneNumber: string): Promise<TheatreOwner | null>;
     updateById(userId: string, user: Partial<TheatreOwner>): Promise<TheatreOwner>;
+    findAll(query: object, skip: number, limit: number): Promise<TheatreOwner[]>;
+    findAllCount(query: object): Promise<number>;
     // findById(id: string): Promise<TheatreOwner | null>;
     // findByPhoneNumber(phoneNumber: string): Promise<TheatreOwner | null>;
     // updateById(userId: string, user: Partial<TheatreOwner>): Promise<TheatreOwner>;

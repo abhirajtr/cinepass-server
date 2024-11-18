@@ -26,7 +26,7 @@ const fileFilter = (
     file: Express.Multer.File,
     cb: FileFilterCallback
 ) => {
-    const allowedFileTypes = /pdf/;
+    const allowedFileTypes = /pdf|doc|docx/; // Allow .pdf, .doc, .docx
     const extname = allowedFileTypes.test(path.extname(file.originalname).toLowerCase());
     const mimetype = allowedFileTypes.test(file.mimetype);
 
@@ -41,7 +41,7 @@ const fileFilter = (
 const upload = multer({
     storage: storage,
     fileFilter: fileFilter,
-    limits: { fileSize: 2 * 1024 * 1024 },
+    limits: { fileSize: 10 * 1024 * 1024 },
 });
 
 export default upload;
