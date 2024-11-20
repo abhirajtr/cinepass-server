@@ -18,6 +18,9 @@ router.post("/forgot-password", (req, res, next) => theatreOwnerController.forgo
 router.post("/reset-password", (req, res, next) => theatreOwnerController.resetPassword(req, res, next));
 router.post("/theatres/add", jwtMiddleware("theatreOwner"), upload.single("verificationDocument"), (req, res, next) => theatreController.addTheatre(req, res, next));
 router.get("/getAllTheatres", jwtMiddleware("theatreOwner"), (req, res, next) => theatreController.getAllTheatres(req, res, next));
+router.post("/refresh-token", (req, res, next) => theatreOwnerController.refreshOnPageLoad(req, res, next));
+router.post("/logout", (req, res, next) => theatreOwnerController.logout(req, res, next));
+
 
 
 

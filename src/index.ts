@@ -16,7 +16,7 @@ import { adminRoutes } from './interface/routes/adminRoutes';
 
 
 
-connectDB();
+connectDB(); 
 
 const app = express();
 
@@ -25,10 +25,10 @@ app.use(cookieParser());
 app.use(express.json());
 
 
-app.use(requestLogger);
+app.use(requestLogger); 
 
 app.use("/user", userRoutes);
-app.use("/theatreOwner", theatreOwnerRoutes);
+app.use("/theatreOwner", theatreOwnerRoutes); 
 app.use("/admin", adminRoutes);
 
 app.use(errorHandler);

@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { DIContainer } from "../../infrastructure/DIContainer";
 import { CustomRequest } from "../middleware/jwtMiddleware";
+import { createApiErrorResponse, createApiResponse } from "../../infrastructure/http/common-response";
+
 
 
 export class TheatreController {
@@ -15,7 +17,7 @@ export class TheatreController {
             const { theatreName, contactEmail, contactNumber, streetAddress, city, state, zipCode, ownerId } = req.body;
             const verificationDocument = req.file?.fieldname
             if (!verificationDocument) {
-                res.status(400).json({ message: "Verification document is required." });
+                res.status(400).json(createApiErrorResponse(["verification document required"], 400, "Verification document is required"))
                 return;
             }
             const theatre = {
@@ -30,7 +32,7 @@ export class TheatreController {
                 ownerId: userId!
             };
             const newTheatre = await this.addTheatreTheatreOnwnerUseCase.execute(theatre);
-            res.status(200).json({ message: 'Theatre added successfully', theatre: newTheatre });
+            res.status(200).json(createApiResponse({ theatre: newTheatre }, 200, "Theatre added successfully"))
         } catch (error) {
             next(error);
         }
@@ -40,7 +42,7 @@ export class TheatreController {
         try {
             const userId = req.userId;
             const theatres = await this.getAllTheatresTheatreOwnerUseCase.execute(userId!);
-            res.status(200).json({ theatres })
+            res.status(200).json(createApiResponse({ theatres }))
         } catch (error) {
             next(error);
         }

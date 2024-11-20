@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { DIContainer } from "../../infrastructure/DIContainer";
+import { createApiResponse } from "../../infrastructure/http/common-response";
 
 export class UserController {
 
@@ -46,7 +47,7 @@ export class UserController {
 
     async loginUser(req: Request, res: Response, next: NextFunction) {
         try {
-            const { email, phoneNumber, password } = req.body;
+            const { email, password } = req.body;
             const { accessToken, refreshToken } = await this.loginUserUseCase.execute(email, password);
             res.status(200).json({
                 message: "Login successful.",
@@ -80,15 +81,14 @@ export class UserController {
     }
 
     async getAllUsers(req: Request, res: Response, next: NextFunction) {
-        console.log(req.query);
         const { search } = req.query;
         const status = req.query.status as string;
         const searchTerm = (search as string) || "";
-        const usersPerPage = Number(req.query.usersPerPage) || 5
+        const usersPerPage = Number(req.query.usersPerPage) || 10
         const currentPage = Number(req.query.currentPage) || 1
         try {
-            const response = await this.getAllUsersAdminUseCase.execute(searchTerm, status, usersPerPage, currentPage);
-            res.status(200).json(response);
+            const users = await this.getAllUsersAdminUseCase.execute(searchTerm, status, usersPerPage, currentPage);
+            res.status(200).json(createApiResponse(users));
         } catch (error) {
             next(error);
         }
@@ -100,9 +100,21 @@ export class UserController {
             const { blockStatus } = req.body;
             console.log("userId:", req.body);
             const response = await this.toggleBlockUserAdminUseCase.execute(userId, blockStatus);
-            res.status(200).json({ message: 'success' });
+            res.status(200).json(createApiResponse());
         } catch (error) {
+            next(error);
+            console.log(error);
+        }
+    }
 
+    async refreshOnPageLoad(req: Request, res: Response, next: NextFunction) {
+        try {
+            console.log(res.cookie);
+            res.status(200).json({});
+            // const refreshToken = 
+        } catch (error) {
+            next(error);
+            console.log(error);
         }
     }
 }

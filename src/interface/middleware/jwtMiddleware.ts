@@ -4,6 +4,7 @@ import { UnauthorizedError } from "../../domain/errors/UnauthorizedError";
 import { ForbiddenError } from "../../domain/errors/ForbiddenError";
 import { UserRole } from "../../domain/entities/User";
 
+
 export interface CustomRequest extends Request {
     userId?: string;
     email?: string;
@@ -12,7 +13,7 @@ export interface CustomRequest extends Request {
 export const jwtMiddleware = (requiredRole: UserRole) => {
     return (req: CustomRequest, res: Response, next: NextFunction) => {
         const authHeader = req.headers["authorization"];
-        console.log("authHeader",authHeader);
+        console.log("authHeader",authHeader); 
         
 
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -24,7 +25,7 @@ export const jwtMiddleware = (requiredRole: UserRole) => {
         try {
             const decodedData = jwt.verify(token, process.env.JWT_ACCESS_SECRET!) as JwtPayload;
             if (!decodedData) {
-                return next(new UnauthorizedError("Invalid or expired token"));
+                return next(new UnauthorizedError("Invalid or expired token")); 
             }
 
             if (requiredRole && decodedData.role !== requiredRole) {

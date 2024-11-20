@@ -7,7 +7,7 @@ export class GetAllUsersAdminUseCase {
     ) { }
 
     async execute(search: string, status: string, usersPerPage: number, currentPage: number) {
-        console.log("search:", search, "status:", status, usersPerPage, currentPage);
+        // console.log("search:", search, "status:", status, usersPerPage, currentPage);
         const skip = (currentPage - 1) * usersPerPage;
         const query: any = {};
         if (search) {
