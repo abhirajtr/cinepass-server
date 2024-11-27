@@ -13,7 +13,7 @@ export interface CustomRequest extends Request {
 export const jwtMiddleware = (requiredRole: UserRole) => {
     return (req: CustomRequest, res: Response, next: NextFunction) => {
         const authHeader = req.headers["authorization"];
-        console.log("authHeader",authHeader); 
+        // console.log("authHeader",authHeader); 
         
 
         if (!authHeader || !authHeader.startsWith("Bearer ")) {

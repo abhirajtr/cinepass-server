@@ -1,14 +1,7 @@
-// import { AddTheatreUsecase } from "../useCases/AddTheatreUseCase";
-// import { BlockUnblockUserByType } from "../useCases/BlockUnblockUserByType";
-// import { ForgotPasswordUseCase } from "../useCases/ForgotPasswordUseCase";
-// import { ForgotPasswordUserUseCase } from "../useCases/ForgotPasswordUserUseCase";
-// import { GetAllUsersByTypeUseCase } from "../useCases/GetAllUsersByTypeUseCase";
-// import { GetTheatresUseCase } from "../useCases/GetTheatresUseCase";
-// import { ListTheatresByOwnerUseCase } from "../useCases/ListTheatresByOwnerUseCase";
-// import { LoginUseCase } from "../useCases/LoginUseCase";
-// import { SignupUseCase } from "../useCases/SignupUseCase";
+import { GetAllTheatreAdminUseCase } from "../useCases/admin/GetAllTheatreAdminUseCase";
 import { GetAllTheatreOwnersAdminUseCase } from "../useCases/admin/GetAllTheatreOwnerAdminUseCase";
 import { GetAllUsersAdminUseCase } from "../useCases/admin/GetAllUsersAdminUseCase";
+import { GetTheatreDocumentUrlAdminUseCase } from "../useCases/admin/GetTheatreDocumentUrlAdminUseCase";
 import { LoginAdminUseCase } from "../useCases/admin/LoginAdminUseCase";
 import { ToggleBlockTheatreOwnerAdminUseCase } from "../useCases/admin/ToggleBlockTheatreOwnerAdminUseCase";
 import { ToggleBlockUserAdminUseCase } from "../useCases/admin/ToggleBlockUserAdminUseCae";
@@ -25,12 +18,18 @@ import { TheatreOwnerRepository } from "./repositories/TheatreOwnerRepository";
 import { TheatreRepository } from "./repositories/TheatreRepository";
 import { UserRepository } from "./repositories/UserRepository";
 
-// src/infrastructure/DIContainer.ts
 class DIContainer {
     private static _adminRepository = new AdminRepository();
     private static _theatreOwnerRepository = new TheatreOwnerRepository();
     private static _userRepository = new UserRepository();
     private static _theatreRepository = new TheatreRepository();
+
+    static getGetTheatreDocumnetUrlAdminUseCase() {
+        return new GetTheatreDocumentUrlAdminUseCase();
+    } 
+    static getGetAllTheatresAdminUseCase() {
+        return new GetAllTheatreAdminUseCase(this.getTheatreRepository());
+    }
 
     static getAllTheatresTheatreOwnerUseCase() {
         return new GetAllTheatresTheatreOwnerUseCase(this.getTheatreRepository());
@@ -47,10 +46,10 @@ class DIContainer {
     static getToggleBlockUserAdminUseCase() {
         return new ToggleBlockUserAdminUseCase(this.getUserRepository());
     }
-    static getGetAllTheatreOwnersAdminUseCase () {
+    static getGetAllTheatreOwnersAdminUseCase() {
         return new GetAllTheatreOwnersAdminUseCase(this.getTheatreOwnerRepository());
     }
-    static getGetAllUsersAdminUseCase () {
+    static getGetAllUsersAdminUseCase() {
         return new GetAllUsersAdminUseCase(this.getUserRepository());
     }
     static getAdminRepository() {
@@ -71,10 +70,10 @@ class DIContainer {
 
     static getSignupTheatreOwnerUseCase() {
         return new SignupTheatreOwnerUseCase(this.getTheatreOwnerRepository());
-    } 
+    }
     static getSignupUserUseCase() {
         return new SignupUserUseCase(this.getUserRepository());
-    } 
+    }
     static getLoginUserUseCase() {
         return new LoginUserUseCase(this.getUserRepository());
     }

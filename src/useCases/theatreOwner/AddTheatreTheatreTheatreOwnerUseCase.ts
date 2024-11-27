@@ -1,16 +1,18 @@
+import { Theatre } from "../../domain/entities/Theatre";
 import { ConflictError } from "../../domain/errors/ConflictError";
 import { ItheatreRepository } from "../../domain/interfaces/ITheatreRepository";
+import { putObjectURL } from "../../utils/s3Utils";
 import { generateUserId } from "../../utils/uuidUtils";
 
 interface AddTheatre {
-    theatreName: string;
-    contactEmail: string;
-    contactNumber: string;
-    streetAddress: string;
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
     city: string;
     state: string;
     zipCode: string;
-    verificationDocument: string;
+    licenseNumber: string;
     ownerId: string;
 }
 
@@ -19,13 +21,22 @@ export class AddTheatreTheatreOwnerUseCase {
         private theatreRepository: ItheatreRepository,
     ) { }
 
-    async execute(theatre: AddTheatre) {
-        const theatreId = generateUserId();
-        const existingTheatre = await this.theatreRepository.findDuplicateTheatre(theatre.ownerId, theatre.streetAddress);
+    async execute(theatre: AddTheatre): Promise<{ presignedUrl: string, newTheatre: Theatre }> {
+        const existingTheatre = await this.theatreRepository.findDuplicateTheatre(theatre.licenseNumber);
         if (existingTheatre) {
-            throw new ConflictError("A theatre with the same owner and street address already exists");
+            throw new ConflictError("A theatre with this license number already exists");
         }
-        const newTheatre = await this.theatreRepository.create({ ...theatre, theatreId, status: "pending" });
-        return newTheatre;
+        console.log("t--->", theatre);
+
+        const theatreId = generateUserId();
+        const presignedUrl = await putObjectURL(`${theatreId}.pdf`, 'application/pdf');
+        const theatreToSave: Theatre = {
+            ...theatre,
+            theatreId,
+            status: "pending",
+            verificationDocument: `${theatreId}.pdf`,
+        }
+        const newTheatre = await this.theatreRepository.create(theatreToSave);
+        return { presignedUrl, newTheatre };
     }
 }

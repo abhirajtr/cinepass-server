@@ -12,6 +12,11 @@ export class LoginAdminUseCase {
     ) { }
 
     async execute(email: string, password: string): Promise<{ accessToken: string, refreshToken: string }> {
+        if (!email || !password) {
+            throw new UnauthorizedError("Email and password are required");
+        }
+        email = email.trim().toLowerCase();
+
         const user = await this.adminRepository.findByEmail(email);
         if (!user) throw new NotFoundError("User not found. Please check the email address");
         const isPasswordMatch = await comparePassword(password, user.password);

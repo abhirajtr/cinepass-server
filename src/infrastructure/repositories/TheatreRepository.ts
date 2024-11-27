@@ -8,11 +8,15 @@ export class TheatreRepository implements TheatreRepository {
         const newTheatre = new TheatreModel(theatre);
         return await newTheatre.save();
     }
-    async findDuplicateTheatre(ownerId: string, streetAddress: string): Promise<Theatre | null> {
-        return await TheatreModel.findOne({ ownerId, streetAddress }).exec();
+    async findDuplicateTheatre(licenseNumber: string): Promise<Theatre | null> {
+        return await TheatreModel.findOne({ licenseNumber });
     }
 
     async findTheatreByTheatreOwnerId(ownerId: string): Promise<Theatre[] | null> {
         return await TheatreModel.find({ ownerId });
+    }
+
+    async findAll(): Promise<Theatre[] | null> {
+        return await TheatreModel.find();
     }
 }

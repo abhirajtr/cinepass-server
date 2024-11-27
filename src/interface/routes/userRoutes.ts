@@ -6,7 +6,7 @@ const router = Router()
 const userController = new UserController();
 
 
-router.post("/signup", (req, res, next) => userController.singup(req, res, next));
+router.post("/signup", (req, res, next) => userController.signup(req, res, next));
 router.post("/resent-otp", (req, res, next) => userController.resendOtp(req, res, next));
 router.post("/verify-otp", (req, res, next) => userController.verifyOtp(req, res, next));
 router.post("/login", (req, res, next) => userController.loginUser(req, res, next));

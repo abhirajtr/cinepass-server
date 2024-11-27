@@ -18,7 +18,7 @@ export class AdminController {
                 secure: req.secure,
                 path: '/',
             });
-            res.status(200).json(createApiResponse({ accessToken }, 200, "Login Successfull"));
+            res.status(200).json(createApiResponse({ accessToken }, 200, "Welcome back! You're now logged in"));
         } catch (error) {
             next(error);
         }

@@ -10,12 +10,12 @@ export class UserController {
     private getAllUsersAdminUseCase = DIContainer.getGetAllUsersAdminUseCase();
     private toggleBlockUserAdminUseCase = DIContainer.getToggleBlockUserAdminUseCase();
 
-    async singup(req: Request, res: Response, next: NextFunction) {
+    async signup(req: Request, res: Response, next: NextFunction) {
 
         try {
-            const { email, phoneNumeber, password, confirmPassword } = req.body;
-            console.log(email, password, phoneNumeber);
-            await this.signupUserUseCase.execute(email, phoneNumeber, confirmPassword);
+            const { email, phoneNumber, password, confirmPassword } = req.body;
+            console.log(email, password, phoneNumber);
+            await this.signupUserUseCase.execute(email, phoneNumber, confirmPassword);
             res.status(200).json({
                 message: 'User registered successfully. Please verify the OTP sent to your email.'
             });
@@ -49,9 +49,12 @@ export class UserController {
         try {
             const { email, password } = req.body;
             const { accessToken, refreshToken } = await this.loginUserUseCase.execute(email, password);
-            res.status(200).json({
-                message: "Login successful.",
-                accessToken
+            res.status(200).json(createApiResponse({ accessToken }, 200, "Welcome back! You're now logged in"));
+            res.cookie('refreshTokenUser', refreshToken, {
+                httpOnly: true,
+                maxAge: 24 * 60 * 60 * 1000,
+                secure: req.secure,
+                path: '/',
             });
         } catch (error) {
             next(error);

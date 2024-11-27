@@ -16,10 +16,10 @@ export class TheatreOwnerController {
     async signup(req: Request, res: Response, next: NextFunction) {
 
         try {
-            const { email, password, confirmPassword, phoneNumeber } = req.body;
-            console.log("signup", email, password, confirmPassword, phoneNumeber);
+            const { email, password, confirmPassword, phoneNumber } = req.body;
+            console.log("signup", email, password, confirmPassword, phoneNumber);
 
-            await this.signupUseCase.execute(email, phoneNumeber, password);
+            await this.signupUseCase.execute(email, phoneNumber, password);
             res.status(200).json(createApiResponse(null, 200, "User registered successfully. Please verify the OTP sent to your email"));
         } catch (error) {
             next(error);
@@ -138,6 +138,14 @@ export class TheatreOwnerController {
                 path: '/theatreOwner', // Ensure it matches
             });
             res.status(200).json({ message: 'Logout successful' });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getAllTheatres(req: Request, res: Response, next: NextFunction) {
+        try {
+            
         } catch (error) {
             next(error);
         }

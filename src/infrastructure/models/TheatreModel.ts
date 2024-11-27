@@ -3,25 +3,27 @@ import { TheatreStatus } from "../../domain/entities/Theatre";
 
 export interface ITheatre extends Document {
     theatreId: string;
-    theatreName: string;
-    contactEmail: string;
-    contactNumber: string;
-    streetAddress: string;
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
     city: string;
     state: string;
     zipCode: string;
     verificationDocument: string;
     ownerId: string;
+    licenseNumber: string;
     status: TheatreStatus;
+    rejectionReason?: string;
 }
 
 const TheatreSchema: Schema = new Schema(
     {
         theatreId: { type: String, required: true, unique: true },
-        theatreName: { type: String, required: true },
-        contactEmail: { type: String, required: true },
-        contactNumber: { type: String, required: true },
-        streetAddress: { type: String, required: true },
+        name: { type: String, required: true },
+        email: { type: String, required: true },
+        phone: { type: String, required: true },
+        address: { type: String, required: true },
         city: { type: String, required: true },
         state: { type: String, required: true },
         zipCode: { type: String, required: true },
@@ -32,17 +34,12 @@ const TheatreSchema: Schema = new Schema(
             enum: ["pending", "verified", "rejected"],
             default: "pending",
         },
+        licenseNumber: { type: String, required: true, unique: true },
         rejectionReason: { type: String, default: null },
 
     }, {
     timestamps: true
-}
-)
-
-TheatreSchema.index(
-    { ownerId: 1, theatreName: 1, streetAddress: 1, city: 1, state: 1, zipCode: 1 },
-    { unique: true }
-);
+})
 
 const TheatreModel = mongoose.model<ITheatre>("theatre", TheatreSchema);
 
