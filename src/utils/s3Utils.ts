@@ -9,7 +9,7 @@ export const getObjectURL = async (key: string) => {
         Bucket: bucketName,
         Key: `verification-docs/${key}`,
     });
-    const url = await getSignedUrl(s3Client, command);
+    const url = await getSignedUrl(s3Client, command, { expiresIn: 5 });
     return url;
 }
 

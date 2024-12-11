@@ -1,19 +1,29 @@
+import { AddMovieAdminUseCase } from "../useCases/admin/AddMovieAdminUseCase";
+import { DeleteMovieAdminUseCase } from "../useCases/admin/DeleteMovieAdminUseCase";
+import { GetAllMoviesAdminUseCase } from "../useCases/admin/GetAllMoviesAdminUseCase";
 import { GetAllTheatreAdminUseCase } from "../useCases/admin/GetAllTheatreAdminUseCase";
 import { GetAllTheatreOwnersAdminUseCase } from "../useCases/admin/GetAllTheatreOwnerAdminUseCase";
 import { GetAllUsersAdminUseCase } from "../useCases/admin/GetAllUsersAdminUseCase";
 import { GetTheatreDocumentUrlAdminUseCase } from "../useCases/admin/GetTheatreDocumentUrlAdminUseCase";
 import { LoginAdminUseCase } from "../useCases/admin/LoginAdminUseCase";
+import { RejectTheatreAdminUseCase } from "../useCases/admin/RejectTheatreAdminUseCase";
 import { ToggleBlockTheatreOwnerAdminUseCase } from "../useCases/admin/ToggleBlockTheatreOwnerAdminUseCase";
 import { ToggleBlockUserAdminUseCase } from "../useCases/admin/ToggleBlockUserAdminUseCae";
+import { VerifyTheatreAdminUseCase } from "../useCases/admin/VerifyTheatreAdminUseCase";
 import { AddTheatreTheatreOwnerUseCase } from "../useCases/theatreOwner/AddTheatreTheatreTheatreOwnerUseCase";
+import { EditTheatreTheatreOwnerUseCase } from "../useCases/theatreOwner/EditTheatreTheatreOwnerUseCase";
 import { ForgotPasswordTheatreOwnerUseCase } from "../useCases/theatreOwner/ForgotPasswordTheatreOwnerUseCase";
 import { GetAllTheatresTheatreOwnerUseCase } from "../useCases/theatreOwner/GetAllTheatresTheatreOwnerUseCase";
+import { GetTheatreDetailsTheatreOwnerUseCase } from "../useCases/theatreOwner/GetTheatreDetailsTheatreOwnerUseCase";
 import { LoginTheatreOwnerUseCase } from "../useCases/theatreOwner/LoginTheatreOwnerUseCase";
 import { SignupTheatreOwnerUseCase } from "../useCases/theatreOwner/SignupTheatreOwnerUseCase";
 import { ForgotPasswordUserUseCase } from "../useCases/User/ForgotPasswordUserUseCase";
 import { LoginUserUseCase } from "../useCases/User/LoginUserUseCase";
 import { SignupUserUseCase } from "../useCases/User/SignupUserUseCase";
 import { AdminRepository } from "./repositories/AdminRepository";
+import { MovieRepository } from "./repositories/MovieRepository";
+import { ScreenRepository } from "./repositories/ScreenRepository";
+import { ShowRepository } from "./repositories/ShowRepository";
 import { TheatreOwnerRepository } from "./repositories/TheatreOwnerRepository";
 import { TheatreRepository } from "./repositories/TheatreRepository";
 import { UserRepository } from "./repositories/UserRepository";
@@ -23,10 +33,45 @@ class DIContainer {
     private static _theatreOwnerRepository = new TheatreOwnerRepository();
     private static _userRepository = new UserRepository();
     private static _theatreRepository = new TheatreRepository();
+    private static _movieRepository = new MovieRepository();
+    private static _screenRepository = new ScreenRepository();
+    private static _showRepository = new ShowRepository();
 
+
+    static getShowRepository() {
+        return this._showRepository;
+    }
+    static getScreenRepository() {
+        return this._screenRepository;
+    }
+    static getEditTheatreTheatreOwnerUseCase() {
+        return new EditTheatreTheatreOwnerUseCase(this.getTheatreRepository());
+    }
+    static getGetTheatreDetailsTheatreOwnerUseCase() {
+        return new GetTheatreDetailsTheatreOwnerUseCase(this.getTheatreRepository());
+    }
+
+    static getDeleteMovieAdminUseCase() {
+        return new DeleteMovieAdminUseCase(this.getMovieRepository());
+    }
+    static getGetAllMoviesAdminUseCase() {
+        return new GetAllMoviesAdminUseCase(this.getMovieRepository());
+    }
+    static getAddMovieAdminUseCase() {
+        return new AddMovieAdminUseCase(this.getMovieRepository());
+    }
+    static getMovieRepository() {
+        return this._movieRepository;
+    }
+    static getRejectTheatreAdminUseCase() {
+        return new RejectTheatreAdminUseCase(this.getTheatreRepository());
+    }
+    static getVerifyTheatreAdminUseCase() {
+        return new VerifyTheatreAdminUseCase(this.getTheatreRepository());
+    }
     static getGetTheatreDocumnetUrlAdminUseCase() {
         return new GetTheatreDocumentUrlAdminUseCase();
-    } 
+    }
     static getGetAllTheatresAdminUseCase() {
         return new GetAllTheatreAdminUseCase(this.getTheatreRepository());
     }

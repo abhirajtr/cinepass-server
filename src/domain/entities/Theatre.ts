@@ -13,6 +13,8 @@ export class Theatre {
         public ownerId: string,
         public licenseNumber: string,
         public status: TheatreStatus,
-        public rejectionReason?: string
+        public latitude: number,
+        public longitude: number,
+        public rejectionReason?: string,
     ) { }
 }

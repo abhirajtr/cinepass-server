@@ -16,7 +16,18 @@ export class TheatreRepository implements TheatreRepository {
         return await TheatreModel.find({ ownerId });
     }
 
-    async findAll(): Promise<Theatre[] | null> {
-        return await TheatreModel.find();
+    async findAll(query: Record<string, any>): Promise<Theatre[] | null> {
+        return await TheatreModel.find(query);
+    }
+
+    async updateByTheatreId(theatreId: string, theatre: Partial<Theatre>): Promise<Theatre | null> {
+        return await TheatreModel.findOneAndUpdate({ theatreId }, { $set: theatre }, { new: true });
+    }
+
+    async find(theatreId: string): Promise<Theatre | null> {
+        return await TheatreModel.findOne({ theatreId });
+    }
+    async update(theatreId: string, theatre: Partial<Theatre>): Promise<void> {
+        await TheatreModel.updateOne({ theatreId }, theatre);
     }
 }

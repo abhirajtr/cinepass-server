@@ -14,6 +14,8 @@ interface AddTheatre {
     zipCode: string;
     licenseNumber: string;
     ownerId: string;
+    latitude: number;
+    longitude: number;
 }
 
 export class AddTheatreTheatreOwnerUseCase {

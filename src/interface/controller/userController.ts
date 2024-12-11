@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { DIContainer } from "../../infrastructure/DIContainer";
-import { createApiResponse } from "../../infrastructure/http/common-response";
+import { createApiErrorResponse, createApiResponse } from "../../infrastructure/http/common-response";
+import { SignupDto } from "../../domain/dtos/SignupDto";
+import { validate } from "class-validator";
 
 export class UserController {
 
@@ -13,12 +15,19 @@ export class UserController {
     async signup(req: Request, res: Response, next: NextFunction) {
 
         try {
-            const { email, phoneNumber, password, confirmPassword } = req.body;
-            console.log(email, password, phoneNumber);
-            await this.signupUserUseCase.execute(email, phoneNumber, confirmPassword);
-            res.status(200).json({
-                message: 'User registered successfully. Please verify the OTP sent to your email.'
-            });
+            const dto = Object.assign(new SignupDto(), req.body);
+            const errors = await validate(dto);
+
+            if (errors.length > 0) {
+                const errorMessages = errors.flatMap(error => {
+                    return Object.values(error.constraints || {});
+                });
+                res.status(400).json(createApiErrorResponse(errorMessages, 400, "Validation failed"));
+                return;
+            }
+            const { email, phoneNumber, password } = dto;
+            await this.signupUserUseCase.execute(email, phoneNumber, password);
+            res.status(200).json(createApiResponse(null, 200, "User registered successfully. Please verify the OTP sent to your email"));
         } catch (error) {
             next(error);
         }

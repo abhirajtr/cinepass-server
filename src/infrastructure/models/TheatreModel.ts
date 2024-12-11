@@ -14,6 +14,8 @@ export interface ITheatre extends Document {
     ownerId: string;
     licenseNumber: string;
     status: TheatreStatus;
+    latitude: number,
+    longitude: number,
     rejectionReason?: string;
 }
 
@@ -35,6 +37,8 @@ const TheatreSchema: Schema = new Schema(
             default: "pending",
         },
         licenseNumber: { type: String, required: true, unique: true },
+        latitude: { type: Number, required: true },
+        longitude: { type: Number, required: true },
         rejectionReason: { type: String, default: null },
 
     }, {

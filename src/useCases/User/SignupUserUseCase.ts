@@ -78,7 +78,6 @@ export class SignupUserUseCase {
         if (storedOtp !== enteredOtp) {
             throw new BadRequestError("Invalid OTP.");
         }
-        console.log(userData, "sssssssssssssss");
         
 
         const hashedPassword = await hashPassword(userData.password);
