@@ -18,6 +18,7 @@ import { GetTheatreDetailsTheatreOwnerUseCase } from "../useCases/theatreOwner/G
 import { LoginTheatreOwnerUseCase } from "../useCases/theatreOwner/LoginTheatreOwnerUseCase";
 import { SignupTheatreOwnerUseCase } from "../useCases/theatreOwner/SignupTheatreOwnerUseCase";
 import { ForgotPasswordUserUseCase } from "../useCases/User/ForgotPasswordUserUseCase";
+import { GetMovieDetailsUseCase } from "../useCases/User/GetMovieDetailsUseCase";
 import { LoginUserUseCase } from "../useCases/User/LoginUserUseCase";
 import { SignupUserUseCase } from "../useCases/User/SignupUserUseCase";
 import { AdminRepository } from "./repositories/AdminRepository";
@@ -43,6 +44,10 @@ class DIContainer {
     }
     static getScreenRepository() {
         return this._screenRepository;
+    }
+
+    static getGetMovieDetailsUseCase() {
+        return new GetMovieDetailsUseCase(this.getMovieRepository());
     }
     static getEditTheatreTheatreOwnerUseCase() {
         return new EditTheatreTheatreOwnerUseCase(this.getTheatreRepository());

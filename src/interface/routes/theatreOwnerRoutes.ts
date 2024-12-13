@@ -4,7 +4,7 @@ import { jwtMiddleware } from "../middleware/jwtMiddleware";
 import { TheatreController } from "../controller/TheatreController";
 import { MovieController } from "../controller/MovieController";
 
-const router = Router();
+const   router = Router();
 const theatreOwnerController = new TheatreOwnerController();
 const theatreController = new TheatreController();
 const movieController = new MovieController();
@@ -26,6 +26,7 @@ router.get("/theatre/get-presigned-url", jwtMiddleware("theatreOwner"), (req, re
 router.post("/theatre/:theatreId/add-screen", jwtMiddleware("theatreOwner"), (req, res, next) => theatreController.addScreen(req, res, next));
 router.get("/theatre/:theatreId/getAllScreens", jwtMiddleware("theatreOwner"), (req, res, next) => theatreController.getAllScreens(req, res, next));
 router.post("/theatre/screen/add-show", jwtMiddleware("theatreOwner"), (req, res, next) => theatreController.addShow(req, res, next));
+router.get("/screen/:screenId/shows", jwtMiddleware("theatreOwner"), (req, res, next) => theatreController.getAllShowsByScreen(req, res, next));
 
 
 

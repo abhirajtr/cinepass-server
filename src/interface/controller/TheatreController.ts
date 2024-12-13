@@ -9,6 +9,7 @@ import { validate } from "class-validator";
 import { CreateScreenTheatreOwnerUseCase } from "../../useCases/theatreOwner/createScreenTheatreOwnerUseCase";
 import { GetAllScreensTheatreOwnerUseCase } from "../../useCases/theatreOwner/GetAllScreensTheatreOwnerUseCase";
 import { CreateShowUseCase } from "../../useCases/theatreOwner/createShowUseCase";
+import { GetAllShowByScreenUseCase } from "../../useCases/theatreOwner/GetAllShowsByScreenUseCase";
 
 
 
@@ -24,6 +25,7 @@ export class TheatreController {
     private createScreen = new CreateScreenTheatreOwnerUseCase(DIContainer.getScreenRepository());
     private getAllScreensUseCaseTheatreOwnerUseCase = new GetAllScreensTheatreOwnerUseCase(DIContainer.getScreenRepository());
     private createShowUseCase = new CreateShowUseCase(DIContainer.getShowRepository(), DIContainer.getScreenRepository());
+    private getAllShowsByScreenUseCase = new GetAllShowByScreenUseCase(DIContainer.getShowRepository());
 
     async addTheatre(req: CustomRequest, res: Response, next: NextFunction) {
         try {
@@ -201,13 +203,22 @@ export class TheatreController {
 
     async addShow(req: Request, res: Response, next: NextFunction) {
         try {
-            const { movie, screenId, theatreId, startDateTime, endDateTime } = req.body;
+            const { movieId, movieTitle, screenId, theatreId, startTime } = req.body;
             console.log(req.body);
-            const startTime = new Date(startDateTime);
-            const endTime = new Date(endDateTime);
+            // const startTime = new Date(startTime);
 
-            const response = await this.createShowUseCase.execute(theatreId, screenId, movie, startTime, endTime);
+            const response = await this.createShowUseCase.execute(theatreId, screenId, movieId, movieTitle, startTime);
             res.status(200).json(createApiResponse());
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getAllShowsByScreen(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { screenId } = req.params;
+            const shows = await this.getAllShowsByScreenUseCase.execute(screenId);
+            res.status(200).json(createApiResponse({ shows }));
         } catch (error) {
             next(error);
         }

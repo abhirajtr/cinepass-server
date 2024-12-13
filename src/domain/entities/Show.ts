@@ -5,9 +5,9 @@ export class Show {
         public showId: string,
         public theatreId: string,
         public screenId: string,
-        public movie: string,
+        public movieId: string,
+        public movieTitle: string,
         public startTime: Date,
-        public endTime: Date,
         public seatLayout: Seat[][],
     ) { }
 }

@@ -11,7 +11,7 @@ export class CreateShowUseCase {
         private screenRepository: IScreenRepository,
     ) { }
 
-    async execute(theatreId: string, screenId: string, movie: string, startTime: Date, endTime: Date) {
+    async execute(theatreId: string, screenId: string, movieId: string, movieTitle: string, startTime: Date) {
         const screen = await this.screenRepository.getScreenById(screenId);
         // console.log(screen?.seatLayout);
         if (!screen) {
@@ -25,9 +25,9 @@ export class CreateShowUseCase {
             generateUserId(),
             theatreId,
             screenId,
-            movie,
+            movieId,
+            movieTitle,
             startTime,
-            endTime,
             screen.seatLayout,
         )
         const response = await this.showRepository.createShow(show);

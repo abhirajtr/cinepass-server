@@ -4,7 +4,11 @@ import { ShowModel } from "../models/ShowModel";
 
 export class ShowRepository implements IShowRepository {
     async createShow(show: Show): Promise<void> {
-        console.log("data to save:", show);        
+        console.log("data to save:", show);
         await ShowModel.create(show);
+    }
+
+    async getAllShowsByScreenId(screenId: string): Promise<Show[]> {
+        return await ShowModel.find({ screenId });
     }
 }

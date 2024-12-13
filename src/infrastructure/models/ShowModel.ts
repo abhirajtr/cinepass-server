@@ -9,11 +9,12 @@ interface ISeat {
 }
 
 interface IShow extends Document {
-    movie: string;
+    showId: string;
+    movieId: string;
+    movieTitle: string;
     screenId: string;
     theatreId: string;
     startTime: Date;
-    endTime: Date;
     seatLayout: ISeat[][];
 }
 
@@ -30,11 +31,12 @@ export const SeatSchema = new Schema<ISeat>({
 // Show schema definition
 const ShowSchema = new Schema<IShow>(
     {
-        movie: { type: String, required: true },
+        showId: { type: String, required: true, unique: true },
+        movieId: { type: String, required: true },
+        movieTitle: { type: String, required: true },
         screenId: { type: String, required: true },
         theatreId: { type: String, required: true },
         startTime: { type: Date, required: true },
-        endTime: { type: Date, required: true },
         seatLayout: { type: [[SeatSchema]], required: true },
     },
     { timestamps: true }

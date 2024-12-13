@@ -2,11 +2,14 @@ import { Request, Response, NextFunction } from "express";
 import { createApiResponse } from "../../infrastructure/http/common-response";
 import { DIContainer } from "../../infrastructure/DIContainer";
 import { BadRequestError } from "../../domain/errors/BadRequestError";
+import { GetNowShowingMoviesUseCase } from "../../useCases/User/GetNowShowingMoviesUseCase";
 
 export class MovieController {
     private addMovieAdminUseCase = DIContainer.getAddMovieAdminUseCase();
     private getGetAllMoviesAdminUseCase = DIContainer.getGetAllMoviesAdminUseCase();
     private getDeleteMovieAdminUseCase = DIContainer.getDeleteMovieAdminUseCase();
+    private getNowShowingMoviesUseCase = new GetNowShowingMoviesUseCase(DIContainer.getMovieRepository());
+    private getMovieDetailsUseCase = DIContainer.getGetMovieDetailsUseCase();
 
     async addMovieAdmin(req: Request, res: Response, next: NextFunction) {
         try {
@@ -39,6 +42,25 @@ export class MovieController {
             const { id } = req.params;
             await this.getDeleteMovieAdminUseCase.execute(id);
             res.status(200).json(createApiResponse());
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getNowShowingMovies(req: Request, res: Response, next: NextFunction) {
+        try {
+            const nowShowingMovies = await this.getNowShowingMoviesUseCase.execute();
+            res.status(200).json(createApiResponse({ nowShowingMovies }));
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getMovieDetails(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { movieId } = req.params;
+            const movieDetails = await this.getMovieDetailsUseCase.execute(movieId);
+            res.status(200).json(createApiResponse({ movieDetails }));
         } catch (error) {
             next(error);
         }
