@@ -24,7 +24,7 @@ export class EditTheatreTheatreOwnerUseCase {
         private theatreRepository: ItheatreRepository,
     ) { }
 
-    async execute(theatre: EditTheatre): Promise<{ presignedUrl: string }> {
+    async execute(theatre: EditTheatre): Promise<string> {
         const presignedUrl = await putObjectURL(`${theatre.theatreId}.pdf`, 'application/pdf');
         const theatreToSave: Theatre = {
             ...theatre,
@@ -32,6 +32,6 @@ export class EditTheatreTheatreOwnerUseCase {
             verificationDocument: `${theatre.theatreId}.pdf`,
         }
         await this.theatreRepository.update(theatre.theatreId, theatreToSave);
-        return { presignedUrl };
+        return presignedUrl;
     }
 }

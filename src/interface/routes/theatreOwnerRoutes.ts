@@ -31,4 +31,5 @@ router.get("/screen/:screenId/shows", jwtMiddleware("theatreOwner"), (req, res, 
 
 
 
+
 export { router as theatreOwnerRoutes };

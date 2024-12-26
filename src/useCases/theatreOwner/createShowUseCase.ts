@@ -20,7 +20,6 @@ export class CreateShowUseCase {
         if (!screen.seatLayout || screen.seatLayout.length === 0) {
             throw new Error("Seat layout is missing or invalid in the screen entity");
         }
-
         const show = new Show(
             generateUserId(),
             theatreId,
@@ -30,6 +29,6 @@ export class CreateShowUseCase {
             startTime,
             screen.seatLayout,
         )
-        const response = await this.showRepository.createShow(show);
+        return await this.showRepository.createShow(show);
     }
 }

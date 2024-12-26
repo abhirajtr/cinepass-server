@@ -9,7 +9,10 @@ import { validate } from "class-validator";
 import { CreateScreenTheatreOwnerUseCase } from "../../useCases/theatreOwner/createScreenTheatreOwnerUseCase";
 import { GetAllScreensTheatreOwnerUseCase } from "../../useCases/theatreOwner/GetAllScreensTheatreOwnerUseCase";
 import { CreateShowUseCase } from "../../useCases/theatreOwner/createShowUseCase";
-import { GetAllShowByScreenUseCase } from "../../useCases/theatreOwner/GetAllShowsByScreenUseCase";
+import { GetAllShowsByScreenUseCase } from "../../useCases/theatreOwner/GetAllShowsByScreenUseCase";
+import { HttpStatusCode } from "axios";
+import { uuidRegex } from "../validators/uuidRegex";
+import { GetTheatresUseCase } from "../../useCases/User/GetTheatresUseCase";
 
 
 
@@ -25,7 +28,8 @@ export class TheatreController {
     private createScreen = new CreateScreenTheatreOwnerUseCase(DIContainer.getScreenRepository());
     private getAllScreensUseCaseTheatreOwnerUseCase = new GetAllScreensTheatreOwnerUseCase(DIContainer.getScreenRepository());
     private createShowUseCase = new CreateShowUseCase(DIContainer.getShowRepository(), DIContainer.getScreenRepository());
-    private getAllShowsByScreenUseCase = new GetAllShowByScreenUseCase(DIContainer.getShowRepository());
+    private getAllShowsByScreenUseCase = new GetAllShowsByScreenUseCase(DIContainer.getShowRepository());
+    private getTheatresUseCase = new GetTheatresUseCase(DIContainer.getTheatreRepository());
 
     async addTheatre(req: CustomRequest, res: Response, next: NextFunction) {
         try {
@@ -38,7 +42,7 @@ export class TheatreController {
                 const errorMessages = errors.flatMap(error => {
                     return Object.values(error.constraints || {});
                 });
-                res.status(400).json(createApiErrorResponse(errorMessages, 400, "Validation failed"));
+                res.status(HttpStatusCode.BadRequest).json(createApiErrorResponse(errorMessages, 400, "Validation failed"));
                 return;
             }
             const { name, email, phone, address, city, state, zipCode, licenseNumber, latitude, longitude } = createTheatreDto;
@@ -56,7 +60,7 @@ export class TheatreController {
                 longitude,
             };
             const { presignedUrl } = await this.addTheatreTheatreOwnerUseCase.execute(theatre);
-            res.status(200).json(createApiResponse({ presignedUrl }, 200, "Theatre added successfully"));
+            res.status(HttpStatusCode.Ok).json(createApiResponse({ presignedUrl }, 200, "Theatre added successfully"));
         } catch (error) {
             next(error);
         }
@@ -82,8 +86,8 @@ export class TheatreController {
                 latitude,
                 longitude,
             };
-            const { presignedUrl } = await this.editTheatreTheatreOwnerUseCase.execute(theatre);
-            res.status(200).json(createApiResponse({}, 200, "Theatre updated successfully"));
+            const presignedUrl = await this.editTheatreTheatreOwnerUseCase.execute(theatre);
+            res.status(HttpStatusCode.Ok).json(createApiResponse(presignedUrl, 200, "Theatre updated successfully"));
         } catch (error) {
             next(error);
         }
@@ -93,7 +97,7 @@ export class TheatreController {
         try {
             const userId = req.userId;
             const theatres = await this.getAllTheatresTheatreOwnerUseCase.execute(userId!);
-            res.status(200).json(createApiResponse({ theatres }))
+            res.status(HttpStatusCode.Ok).json(createApiResponse({ theatres }))
         } catch (error) {
             next(error);
         }
@@ -109,7 +113,7 @@ export class TheatreController {
                 status = "all"
             }
             const theatres = await this.getAllTheatresAdminUseCase.execute(searchTerm, status);
-            res.status(200).json(createApiResponse({ theatres }, 200));
+            res.status(HttpStatusCode.Ok).json(createApiResponse({ theatres }, 200));
         } catch (error) {
             next(error);
         }
@@ -119,7 +123,7 @@ export class TheatreController {
         try {
             const { fileName } = req.query;
             const documentUrl = await this.getGetTheatreDocumentUrlAdminUseCase.execute(fileName as string);
-            res.status(200).json(createApiResponse({ documentUrl }));
+            res.status(HttpStatusCode.Ok).json(createApiResponse({ documentUrl }));
         } catch (error) {
             next(error);
         }
@@ -132,7 +136,7 @@ export class TheatreController {
                 throw new BadRequestError("theatreId is missing or invalid");
             }
             await this.verifyTheatreAdminUseCase.execute(theatreId);
-            res.status(200).json(createApiResponse());
+            res.status(HttpStatusCode.Ok).json(createApiResponse());
         } catch (error) {
             console.log(error);
             next(error);
@@ -150,7 +154,7 @@ export class TheatreController {
                 throw new BadRequestError("theatreId is missing or invalid");
             }
             await this.rejectTheatreAdminUseCase.execute(theatreId, reason);
-            res.status(200).json(createApiResponse());
+            res.status(HttpStatusCode.Ok).json(createApiResponse());
         } catch (error) {
             next(error);
         }
@@ -160,7 +164,7 @@ export class TheatreController {
         try {
             const { theatreId } = req.params;
             const theatre = await this.getTheatreDetailsTheatreOwnerUseCase.execute(theatreId);
-            res.status(200).json(createApiResponse({ theatre }));
+            res.status(HttpStatusCode.Ok).json(createApiResponse({ theatre }));
         } catch (error) {
             next(error);
         }
@@ -181,7 +185,7 @@ export class TheatreController {
             console.log(req.body);
             const { theatreId, screenName, seats, capacity } = req.body;
             await this.createScreen.execute(theatreId, screenName, seats, capacity);
-            res.status(200).json(createApiResponse());
+            res.status(HttpStatusCode.Ok).json(createApiResponse());
         } catch (error) {
             next(error);
         }
@@ -191,11 +195,11 @@ export class TheatreController {
         try {
             const { theatreId } = req.params;
             if (!theatreId) {
-                res.status(400).json(createApiErrorResponse(["theatreId required"], 400, "theatreId required"));
+                res.status(HttpStatusCode.BadRequest).json(createApiErrorResponse(["theatreId required"], 400, "theatreId required"));
             }
             const screens = await this.getAllScreensUseCaseTheatreOwnerUseCase.execute(theatreId);
             console.log(screens);
-            res.status(200).json(createApiResponse({ screens }));
+            res.status(HttpStatusCode.Ok).json(createApiResponse({ screens }));
         } catch (error) {
             next(error);
         }
@@ -207,8 +211,8 @@ export class TheatreController {
             console.log(req.body);
             // const startTime = new Date(startTime);
 
-            const response = await this.createShowUseCase.execute(theatreId, screenId, movieId, movieTitle, startTime);
-            res.status(200).json(createApiResponse());
+            const newShow = await this.createShowUseCase.execute(theatreId, screenId, movieId, movieTitle, startTime);
+            res.status(HttpStatusCode.Ok).json(createApiResponse({ show: newShow }));
         } catch (error) {
             next(error);
         }
@@ -217,8 +221,37 @@ export class TheatreController {
     async getAllShowsByScreen(req: Request, res: Response, next: NextFunction) {
         try {
             const { screenId } = req.params;
-            const shows = await this.getAllShowsByScreenUseCase.execute(screenId);
-            res.status(200).json(createApiResponse({ shows }));
+            const { search, date } = req.query;
+            if (!uuidRegex.test(screenId)) {
+                res.status(400).json(createApiErrorResponse(["Invalid screenId format. Must be a valid UUID"]));
+                return
+            }
+            if (search && typeof search !== 'string') {
+                res.status(400).json(createApiErrorResponse(["Search should be a string"]));
+                return
+            }
+            if (date && typeof date === 'string' && isNaN(Date.parse(date))) {
+                res.status(400).json(createApiResponse(["Invalid date format. Use ISO 8601 format"]));
+                return
+            }
+            const shows = await this.getAllShowsByScreenUseCase.execute({
+                screenId, search, date: typeof date === 'string' ? date : undefined
+            });
+            res.status(HttpStatusCode.Ok).json(createApiResponse({ shows }));
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getTheatres(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { search } = req.query;
+            if (typeof search !== 'string') {
+                res.status(HttpStatusCode.BadRequest).json(createApiErrorResponse(["Search term is required and must be a string"]));
+                return
+            }
+            const theatres = await this.getTheatresUseCase.execute(search);            
+            res.status(HttpStatusCode.Accepted).json(createApiResponse(theatres));
         } catch (error) {
             next(error);
         }

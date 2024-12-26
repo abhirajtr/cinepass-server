@@ -22,4 +22,17 @@ export class MovieRepository implements IMovieRepository {
         const movieDetails = await MovieModel.findOne({ movieId: movieId });
         return movieDetails ?? null;
     }
+    async getUpcomingMovies(): Promise<Movie[]> {
+        try {
+            const currentDate = new Date();
+            return await MovieModel.find({
+                releaseDate: { $gte: currentDate.toISOString() },
+            }).sort({ releaseDate: 1 });
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new Error(`Error fetching upcoming movies: ${error.message}`);
+            }
+            throw new Error('An unknown error occurred while fetching upcoming movies.');
+        }
+    }
 }

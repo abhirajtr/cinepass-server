@@ -27,6 +27,8 @@ router.patch("/theatre/:theatreId/reject", jwtMiddleware("admin"), (req, res, ne
 router.post("/movies/add", jwtMiddleware("admin"), (req, res, next) => movieController.addMovieAdmin(req, res, next));
 router.get("/movies", jwtMiddleware("admin"), (req, res, next) => movieController.getAllMoviesAdmin(req, res, next));
 router.delete("/movies/:id/delete", jwtMiddleware("admin"), (req, res, next) => movieController.deleteMovieAdmin(req, res, next));
+router.get("/total-revenue", (req, res, next) => adminController.getTotalRevenue(req, res, next));
+router.get("/upcoming-movies", (req, res, next) => movieController.getUpcomingMovies(req, res, next));
 
 
 

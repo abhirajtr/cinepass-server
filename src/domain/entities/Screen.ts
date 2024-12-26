@@ -4,6 +4,7 @@ export class Seat {
         public label: string,
         public type: string,
         public price: number,
+        public isBooked: boolean,
     ) {}
 }
 

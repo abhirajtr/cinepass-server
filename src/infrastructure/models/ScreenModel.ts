@@ -5,6 +5,7 @@ interface ISeat {
     label: string;
     type: string;
     price: number;
+    isBooked: boolean;
 }
 
 interface IScreen extends Document {
@@ -19,6 +20,7 @@ export const SeatSchema = new Schema<ISeat>({
     label: { type: String, required: true },
     type: { type: String, required: true },
     price: { type: Number, required: true },
+    isBooked: { type: Boolean, required: true },
 },
     { _id: false }
 );

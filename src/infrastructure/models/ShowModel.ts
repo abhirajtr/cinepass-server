@@ -28,21 +28,19 @@ export const SeatSchema = new Schema<ISeat>({
     { _id: false }
 );
 
-// Show schema definition
 const ShowSchema = new Schema<IShow>(
     {
         showId: { type: String, required: true, unique: true },
-        movieId: { type: String, required: true },
+        movieId: { type: String, ref: "movie", required: true },
         movieTitle: { type: String, required: true },
-        screenId: { type: String, required: true },
-        theatreId: { type: String, required: true },
+        screenId: { type: String, ref: "screen", required: true },
+        theatreId: { type: String, ref: "theatre", required: true },
         startTime: { type: Date, required: true },
         seatLayout: { type: [[SeatSchema]], required: true },
     },
     { timestamps: true }
 );
 
-// Create the Show model
 const ShowModel = mongoose.model<IShow>("Show", ShowSchema);
 
 export { ShowModel, IShow };

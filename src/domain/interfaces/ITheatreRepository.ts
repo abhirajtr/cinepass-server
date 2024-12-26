@@ -8,5 +8,5 @@ export interface ItheatreRepository {
     updateByTheatreId(theatreId: string, theatre: Partial<Theatre>): Promise<Theatre | null>;
     find(theatreId: string): Promise<Theatre | null>
     // update(theatre: Partial<Theatre>):Promise<Theatre>
-    update(theatreId: string, theatre: Partial<Theatre>): Promise<void>;
+    update(theatreId: string, theatre: Partial<Theatre>): Promise<Theatre | null>;
 }

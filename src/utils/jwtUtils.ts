@@ -22,7 +22,7 @@ export function verifyResetToken(token: string): JwtPayload | null {
 }
 
 export function generateAccessToken(payload: JwtPayload): string {
-    return jwt.sign(payload, ACCESS_SECRET, { expiresIn: ACCESS_EXPIRATION });
+    return jwt.sign(payload, ACCESS_SECRET, { expiresIn: '2d' });
 }
 
 export function generateRefreshToken(payload: JwtPayload): string {

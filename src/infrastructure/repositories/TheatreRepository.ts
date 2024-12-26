@@ -27,7 +27,13 @@ export class TheatreRepository implements TheatreRepository {
     async find(theatreId: string): Promise<Theatre | null> {
         return await TheatreModel.findOne({ theatreId });
     }
-    async update(theatreId: string, theatre: Partial<Theatre>): Promise<void> {
-        await TheatreModel.updateOne({ theatreId }, theatre);
+    async update(theatreId: string, theatre: Partial<Theatre>): Promise<Theatre | null> {
+        const updatedTheatre = await TheatreModel.findOneAndUpdate(
+            { theatreId },          // Query to find the theatre
+            { $set: theatre },      // Apply partial updates
+            { new: true }           // Return the updated document
+        ).lean(); // Optional: Convert Mongoose document to plain object
+        
+        return updatedTheatre;
     }
 }

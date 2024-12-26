@@ -22,6 +22,7 @@ import { GetMovieDetailsUseCase } from "../useCases/User/GetMovieDetailsUseCase"
 import { LoginUserUseCase } from "../useCases/User/LoginUserUseCase";
 import { SignupUserUseCase } from "../useCases/User/SignupUserUseCase";
 import { AdminRepository } from "./repositories/AdminRepository";
+import { BookingRepository } from "./repositories/BookingRepository";
 import { MovieRepository } from "./repositories/MovieRepository";
 import { ScreenRepository } from "./repositories/ScreenRepository";
 import { ShowRepository } from "./repositories/ShowRepository";
@@ -37,8 +38,12 @@ class DIContainer {
     private static _movieRepository = new MovieRepository();
     private static _screenRepository = new ScreenRepository();
     private static _showRepository = new ShowRepository();
+    private static _bookingRepository = new BookingRepository();
 
 
+    static getBookingRepository() {
+        return this._bookingRepository;
+    }    
     static getShowRepository() {
         return this._showRepository;
     }

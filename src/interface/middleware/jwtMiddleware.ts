@@ -31,6 +31,8 @@ export const jwtMiddleware = (requiredRole: UserRole) => {
             if (requiredRole && decodedData.role !== requiredRole) {
                 return next(new ForbiddenError("Insufficient permissions"));
             }
+            // console.log("dd--->",decodedData);
+            
             req.userId = decodedData.userId
             req.email = decodedData.email;
 
