@@ -7,5 +7,9 @@ export class Booking {
         public showTime: Date,
         public seats: string[],
         public price: number,
+        public status: "confirmed" | "cancelled",
+        public createdAt: Date,
+        public showId: string,
+        public updatedAt?: Date,
     ) { }
 }

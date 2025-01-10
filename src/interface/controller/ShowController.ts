@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction, query } from "express";
 import { GetShowsByMovieIdUseCase } from "../../useCases/User/GetShowsByMovieIdUseCase";
 import { DIContainer } from "../../infrastructure/DIContainer";
-import { createApiResponse } from "../../infrastructure/http/common-response";
+import { createApiErrorResponse, createApiResponse } from "../../infrastructure/http/common-response";
 import { BadRequestError } from "../../domain/errors/BadRequestError";
 import { GetSeatLayoutUseCase } from "../../useCases/User/GetSeatLayoutUseCase";
 import { BookSeatsUseCase } from "../../useCases/User/BookSeatsUseCase";
@@ -10,6 +10,7 @@ import { HttpStatusCode } from "axios";
 import { CustomRequest } from "../middleware/jwtMiddleware";
 import { GetBookingsUseCase } from "../../useCases/User/GetBookingsUseCase";
 import QRCode from 'qrcode';
+import { CancelTicketUseCase } from "../../useCases/User/CancelTicketUseCase";
 
 export class ShowController {
     private getShowByMovieIdUseCase = new GetShowsByMovieIdUseCase(DIContainer.getShowRepository(), DIContainer.getMovieRepository());
@@ -17,6 +18,7 @@ export class ShowController {
     private bookSeatsUseCase = new BookSeatsUseCase(DIContainer.getShowRepository(), process.env.STRIPE_SECRET_KEY!);
     private successBookingUseCase = new SuccessBookingUseCase(DIContainer.getShowRepository(), DIContainer.getBookingRepository(), process.env.STRIPE_SECRET_KEY!);
     private getBookingsUseCase = new GetBookingsUseCase(DIContainer.getBookingRepository());
+    private cancelTicketUseCase = new CancelTicketUseCase(DIContainer.getBookingRepository(), DIContainer.getUserRepository(), DIContainer.getShowRepository(), DIContainer.getWalletRepository());
 
     async getShowsByMovieId(req: Request, res: Response, next: NextFunction) {
         try {
@@ -113,6 +115,23 @@ export class ShowController {
                 qrCode,
                 message: 'QR Code generated successfully',
             });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async cancelTicket(req: CustomRequest, res: Response, next: NextFunction) {
+        try {
+            const { userId } = req;
+            const { bookingId } = req.params;
+            if (!bookingId || typeof bookingId !== 'string') {
+                res.status(HttpStatusCode.BadRequest)
+                    .json(createApiErrorResponse(["Invalid booking ID format"], HttpStatusCode.BadRequest, "Invalid booking ID format"))
+                return
+            }
+            console.log("Cancellation requested by user:", userId, "for booking:", bookingId);
+            await this.cancelTicketUseCase.execute(userId!, bookingId);
+            res.status(HttpStatusCode.Ok).json(createApiResponse());
         } catch (error) {
             next(error);
         }

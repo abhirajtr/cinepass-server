@@ -19,17 +19,14 @@ export class ShowRepository implements IShowRepository {
         if (!show) {
             throw new Error('Show not found');
         }
-
-        // Update the seat layout
         show.seatLayout.forEach((row) => {
             row.forEach((seat) => {
                 if (selectedSeats.includes(seat.label)) {
-                    seat.isBooked =  isReserved;
+                    seat.isBooked = isReserved;
                 }
             });
         });
-
-        await show.save();  // This is the correct way to save the instance
+        await show.save();
     }
 
     async getShows(query: { [key: string]: any }): Promise<Show[]> {

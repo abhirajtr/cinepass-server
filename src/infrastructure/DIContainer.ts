@@ -29,6 +29,7 @@ import { ShowRepository } from "./repositories/ShowRepository";
 import { TheatreOwnerRepository } from "./repositories/TheatreOwnerRepository";
 import { TheatreRepository } from "./repositories/TheatreRepository";
 import { UserRepository } from "./repositories/UserRepository";
+import { WalletRepository } from "./repositories/WalletRepository";
 
 class DIContainer {
     private static _adminRepository = new AdminRepository();
@@ -39,6 +40,7 @@ class DIContainer {
     private static _screenRepository = new ScreenRepository();
     private static _showRepository = new ShowRepository();
     private static _bookingRepository = new BookingRepository();
+    private static _walletRepository = new WalletRepository();
 
 
     static getBookingRepository() {
@@ -49,6 +51,9 @@ class DIContainer {
     }
     static getScreenRepository() {
         return this._screenRepository;
+    }
+    static getWalletRepository() {
+        return this._walletRepository;
     }
 
     static getGetMovieDetailsUseCase() {

@@ -16,7 +16,7 @@ router.post("/login", (req, res, next) => theatreOwnerController.login(req, res,
 router.post("/forgot-password", (req, res, next) => theatreOwnerController.forgotPassword(req, res, next));
 router.post("/reset-password", (req, res, next) => theatreOwnerController.resetPassword(req, res, next));
 router.get("/getAllTheatres", jwtMiddleware("theatreOwner"), (req, res, next) => theatreController.getAllTheatres(req, res, next));
-router.post("/refresh-token", (req, res, next) => theatreOwnerController.refreshOnPageLoad(req, res, next));
+// router.post("/refresh-token", (req, res, next) => theatreOwnerController.refreshOnPageLoad(req, res, next));
 router.post("/logout", (req, res, next) => theatreOwnerController.logout(req, res, next));
 router.post("/theatres/add", jwtMiddleware("theatreOwner"), (req, res, next) => theatreController.addTheatre(req, res, next));
 router.get("/theatres/:theatreId", jwtMiddleware("theatreOwner"), (req, res, next) => theatreController.getTheatreDetailsTheatreOwner(req, res, next));
@@ -27,6 +27,7 @@ router.post("/theatre/:theatreId/add-screen", jwtMiddleware("theatreOwner"), (re
 router.get("/theatre/:theatreId/getAllScreens", jwtMiddleware("theatreOwner"), (req, res, next) => theatreController.getAllScreens(req, res, next));
 router.post("/theatre/screen/add-show", jwtMiddleware("theatreOwner"), (req, res, next) => theatreController.addShow(req, res, next));
 router.get("/screen/:screenId/shows", jwtMiddleware("theatreOwner"), (req, res, next) => theatreController.getAllShowsByScreen(req, res, next));
+router.get("/dashboard", jwtMiddleware("theatreOwner"), (req, res, next) => theatreOwnerController.getTotalTicketSales(req, res, next));
 
 
 

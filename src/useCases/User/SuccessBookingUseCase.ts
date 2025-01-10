@@ -28,8 +28,8 @@ export class SuccessBookingUseCase {
         try {
             // Retrieve the session details from Stripe
             const session = await this.stripe.checkout.sessions.retrieve(sessionId);
-            console.log("sss", session);
-            
+            console.log("stripe session", session);
+
             if (session.payment_status !== "paid") {
                 return {
                     success: false,
@@ -71,13 +71,16 @@ export class SuccessBookingUseCase {
             // Save the updated show in the repository
             await this.showRepository.updateSeats(showId, selectedSeats, true);
             await this.bookingRepository.create({
-                bookingId: generateUserId(), 
-                movieTitle:show.movieTitle, 
-                price: Number(session.amount_total), 
-                seats:selectedSeats, 
-                showTime: show.startTime, 
-                theatreId: show.theatreId, 
+                bookingId: generateUserId(),
+                movieTitle: show.movieTitle,
+                price: Number(session.amount_total),
+                seats: selectedSeats,
+                showTime: show.startTime,
+                theatreId: show.theatreId,
                 userId: userId!,
+                status: "confirmed",
+                createdAt: new Date(Date.now()),
+                showId
             });
 
             return {

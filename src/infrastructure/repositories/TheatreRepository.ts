@@ -17,7 +17,7 @@ export class TheatreRepository implements TheatreRepository {
     }
 
     async findAll(query: Record<string, any>): Promise<Theatre[] | null> {
-        return await TheatreModel.find(query);
+        return await TheatreModel.find(query).sort({ updatedAt: -1 });
     }
 
     async updateByTheatreId(theatreId: string, theatre: Partial<Theatre>): Promise<Theatre | null> {
@@ -33,7 +33,7 @@ export class TheatreRepository implements TheatreRepository {
             { $set: theatre },      // Apply partial updates
             { new: true }           // Return the updated document
         ).lean(); // Optional: Convert Mongoose document to plain object
-        
+
         return updatedTheatre;
     }
 }

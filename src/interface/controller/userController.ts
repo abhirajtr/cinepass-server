@@ -198,4 +198,12 @@ export class UserController {
             next(error);
         }
     }
+
+    async getWallet(req: CustomRequest, res: Response, next: NextFunction) {
+        try {
+            
+        } catch (error) {
+            next(error);
+        }
+    }
 }

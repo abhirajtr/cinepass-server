@@ -29,6 +29,7 @@ router.get("/movies", jwtMiddleware("admin"), (req, res, next) => movieControlle
 router.delete("/movies/:id/delete", jwtMiddleware("admin"), (req, res, next) => movieController.deleteMovieAdmin(req, res, next));
 router.get("/total-revenue", (req, res, next) => adminController.getTotalRevenue(req, res, next));
 router.get("/upcoming-movies", (req, res, next) => movieController.getUpcomingMovies(req, res, next));
+// router.get("/total-ticket-sales", (req, res, next) => (req, res, next));
 
 
 

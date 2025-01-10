@@ -5,6 +5,8 @@ import { UnauthorizedError } from "../../domain/errors/UnauthorizedError";
 import { generateAccessToken, verifyRefreshToken } from "../../utils/jwtUtils";
 import { createApiResponse } from "../../infrastructure/http/common-response";
 import { HttpStatusCode } from "axios";
+import { TotalTicketSalesUseCase } from "../../useCases/theatreOwner/TotalTicketSalesUseCase";
+import { BadRequestError } from "../../domain/errors/BadRequestError";
 
 export class TheatreOwnerController {
 
@@ -13,6 +15,7 @@ export class TheatreOwnerController {
     private forgotPasswordUseCase = DIContainer.getForgotPasswordTheatreOwnerUseCase();
     private getAllTheatreOwnersAdminUseCase = DIContainer.getGetAllTheatreOwnersAdminUseCase();
     private toggleBlockTheatreOwnerAdminUseCase = DIContainer.getToggleBlockTheatreOwnerAdminUseCase();
+    private totalTicketSalesUseCase = new TotalTicketSalesUseCase(DIContainer.getBookingRepository());
 
     async signup(req: Request, res: Response, next: NextFunction) {
 
@@ -146,7 +149,25 @@ export class TheatreOwnerController {
 
     async getAllTheatres(req: Request, res: Response, next: NextFunction) {
         try {
-            
+
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getTotalTicketSales(req: CustomRequest, res: Response, next: NextFunction) {
+        try {
+            const { userId } = req;
+            if (!userId) {
+                throw new BadRequestError();
+            }
+            const { period } = req.query;
+
+            // Ensure the period is one of the valid values or use a default
+            const validPeriods: ("today" | "weekly" | "monthly" | "yearly" | "custom")[] = ["today", "weekly", "monthly", "yearly", "custom"];
+            const selectedPeriod = validPeriods.includes(period as any) ? (period as "today" | "weekly" | "monthly" | "yearly" | "custom") : "today";
+            const response = await this.totalTicketSalesUseCase.execute(userId, selectedPeriod);
+            res.status(HttpStatusCode.Ok).json(createApiResponse(response));
         } catch (error) {
             next(error);
         }

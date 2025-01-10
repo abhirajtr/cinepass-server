@@ -64,4 +64,11 @@ export class BookingRepository implements IBookingRepository {
             throw new Error('An unknown error occurred during fetching recent bookings.');
         }
     }
+
+    async getUserBooking(bookingId: string): Promise<Booking | null> {
+        return await BookingModel.findOne({ bookingId });
+    }
+    async updateBooking(bookingId: string, booking: Partial<Booking>): Promise<void> {
+        await BookingModel.findOneAndUpdate({ bookingId }, booking);
+    }
 }

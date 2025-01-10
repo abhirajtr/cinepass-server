@@ -56,7 +56,9 @@ export class MovieController {
 
     async getNowShowingMovies(req: Request, res: Response, next: NextFunction) {
         try {
-            const nowShowingMovies = await this.getNowShowingMoviesUseCase.execute();
+            let {district} = req.query;
+            if (!district) district = "Ernakulam"
+            const nowShowingMovies = await this.getNowShowingMoviesUseCase.execute(district as string);
             res.status(200).json(createApiResponse({ nowShowingMovies }));
         } catch (error) {
             next(error);

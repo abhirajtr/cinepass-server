@@ -35,6 +35,8 @@ router.get('/theatres', (req, res, next) => theatreController.getTheatres(req, r
 router.get('/getUserInfo', jwtMiddleware("regularUser"), (req, res, next) => userController.getUserInfo(req, res, next));
 router.post('/update-name', jwtMiddleware("regularUser"), (req, res, next) => userController.updateUserName(req, res, next));
 router.put('/update-password', jwtMiddleware("regularUser"), (req, res, next) => userController.updatePassword(req, res, next));
+router.patch('/cancel-booking/:bookingId', jwtMiddleware("regularUser"), (req, res, next) => showController.cancelTicket(req, res, next));
+// router.get("/wallet",)
 
 
 
