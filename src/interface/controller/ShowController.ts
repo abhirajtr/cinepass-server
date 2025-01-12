@@ -13,6 +13,7 @@ import QRCode from 'qrcode';
 import { CancelTicketUseCase } from "../../useCases/User/CancelTicketUseCase";
 
 export class ShowController {
+    private frontend_url = process.env.FRONTEND_URL
     private getShowByMovieIdUseCase = new GetShowsByMovieIdUseCase(DIContainer.getShowRepository(), DIContainer.getMovieRepository());
     private getSeatLayoutUseCase = new GetSeatLayoutUseCase(DIContainer.getShowRepository());
     private bookSeatsUseCase = new BookSeatsUseCase(DIContainer.getShowRepository(), process.env.STRIPE_SECRET_KEY!);
@@ -78,7 +79,7 @@ export class ShowController {
             }
             await this.successBookingUseCase.execute(sessionId);
             // res.status(200).json(createApiResponse());
-            res.status(HttpStatusCode.Found).redirect(`http://localhost:4000/bookings`);
+            res.status(HttpStatusCode.Found).redirect(`${this.frontend_url}/bookings`);
         } catch (error) {
             next(error);
         }
