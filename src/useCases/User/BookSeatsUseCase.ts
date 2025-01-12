@@ -3,6 +3,7 @@ import { IShowRepository } from "../../domain/interfaces/IShowRepository";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2024-11-20.acacia' });
+const API_URL = process.env.API_URL;
 
 export interface BookSeatsRequest {
     showId: string;
@@ -68,7 +69,7 @@ export class BookSeatsUseCase {
                     quantity: 1,
                 }],
                 mode: 'payment',
-                success_url: `http://localhost:3000/user/seat-booking/success?sessionId={CHECKOUT_SESSION_ID}`, //Replace with your success URL
+                success_url: `${API_URL}/user/seat-booking/success?sessionId={CHECKOUT_SESSION_ID}`, //Replace with your success URL
                 cancel_url: 'http://your-cancel-url', //Replace with your cancel URL
                 metadata: {
                     showId,

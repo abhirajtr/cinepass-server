@@ -1,9 +1,7 @@
 import { CorsOptions } from 'cors';
 
 const corsConfig: CorsOptions = {
-    origin: process.env.NODE_ENV === 'production'
-        ? process.env.FRONTEND_URL
-        : 'http://localhost:4000', 
+    origin: '*', 
 
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
