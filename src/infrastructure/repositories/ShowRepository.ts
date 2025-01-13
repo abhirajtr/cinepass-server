@@ -86,4 +86,23 @@ export class ShowRepository implements IShowRepository {
 
         return data as ITheatreWithShows[];
     }
+    async updateShow(showId: string, updates: { movieId?: string; movieTitle?: string; startTime?: Date }): Promise<void> {
+        const show = await ShowModel.findOne({ showId }).exec();
+        if (!show) {
+            throw new Error("Show not found");
+        }
+
+        // Apply updates if they are provided
+        if (updates.movieId) {
+            show.movieId = updates.movieId;
+        }
+        if (updates.movieTitle) {
+            show.movieTitle = updates.movieTitle;
+        }
+        if (updates.startTime) {
+            show.startTime = updates.startTime;
+        }
+
+        await show.save();
+    }
 }

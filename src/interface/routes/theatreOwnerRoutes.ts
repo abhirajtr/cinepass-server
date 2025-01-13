@@ -5,7 +5,7 @@ import { TheatreController } from "../controller/TheatreController";
 import { MovieController } from "../controller/MovieController";
 import { ShowController } from "../controller/ShowController";
 
-const   router = Router();
+const router = Router();
 const theatreOwnerController = new TheatreOwnerController();
 const theatreController = new TheatreController();
 const movieController = new MovieController();
@@ -33,6 +33,7 @@ router.get("/dashboard", jwtMiddleware("theatreOwner"), (req, res, next) => thea
 router.get("/showBookingDetails/:showId", jwtMiddleware("theatreOwner"), (req, res, next) => showController.getShowBookingDetails(req, res, next));
 router.get("/movie/:movieId/details", (req, res, next) => movieController.getMovieDetails(req, res, next));
 router.get("/bookedBy/:showId", (req, res, next) => showController.getBookedBy(req, res, next));
+router.put("/update-show/:showId", jwtMiddleware("theatreOwner"), (req, res, next) => showController.updateShow(req, res, next))
 
 
 

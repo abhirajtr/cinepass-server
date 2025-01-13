@@ -13,6 +13,7 @@ import QRCode from 'qrcode';
 import { CancelTicketUseCase } from "../../useCases/User/CancelTicketUseCase";
 import { GetShowBookingDetailsUseCase } from "../../useCases/theatreOwner/GetShowBookingDetailsUseCase";
 import { BookingModel } from "../../infrastructure/models/BookingModel";
+import { UpdateShowUseCase } from "../../useCases/theatreOwner/UpdateShowUseCase";
 
 export class ShowController {
     private frontend_url = process.env.FRONTEND_URL
@@ -23,6 +24,7 @@ export class ShowController {
     private getBookingsUseCase = new GetBookingsUseCase(DIContainer.getBookingRepository());
     private cancelTicketUseCase = new CancelTicketUseCase(DIContainer.getBookingRepository(), DIContainer.getUserRepository(), DIContainer.getShowRepository(), DIContainer.getWalletRepository());
     private getShowBookingDetailsUseCase = new GetShowBookingDetailsUseCase(DIContainer.getShowRepository());
+    private updateShowUseCase = new UpdateShowUseCase(DIContainer.getShowRepository());
 
     async getShowsByMovieId(req: Request, res: Response, next: NextFunction) {
         try {
@@ -191,6 +193,17 @@ export class ShowController {
             console.log(result);
             res.status(200).json(createApiResponse(result));
 
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async updateShow(req: CustomRequest, res: Response, next: NextFunction) {
+        try {
+            const { movieId, movieTitle, screenId, theatreId, startTime } = req.body;
+            const { showId } = req.params;
+            await this.updateShowUseCase.execute(showId, movieId, movieTitle, startTime);
+            res.status(HttpStatusCode.Ok).json(createApiResponse());
         } catch (error) {
             next(error);
         }

@@ -21,6 +21,7 @@ export interface IShowRepository {
     updateSeats(showId: string, selectedSeats: string[], isReserved: boolean): Promise<void>;
     getShows(query: { [key: string]: any }): Promise<Show[]>
     getTheatresWithShowsByMovieId(movieId: string, startDate: Date, endDate: Date): Promise<ITheatreWithShows[]>;
+    updateShow(showId: string, updates: Partial<Pick<Show, "movieId" | "movieTitle" | "startTime">>): Promise<void>;
 }
 
 
