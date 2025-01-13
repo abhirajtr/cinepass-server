@@ -26,6 +26,7 @@ router.get("/seat-selection/:showId", (req, res, next) => showController.getShow
 router.post("/book-seat", jwtMiddleware("regularUser"), (req, res, next) => showController.bookSeats(req, res, next));
 router.get("/seat-booking/success", (req, res, next) => showController.bookSeatsSuccess(req, res, next));
 router.get("/booking-history", jwtMiddleware("regularUser"), (req, res, next) => showController.bookings(req, res, next));
+router.post("/movie/:movieId/review", jwtMiddleware("regularUser"), (req, res, next) => movieController.addReview(req, res, next));
 
 router.get("/movie/:movieId/theatres", (req, res, next) => movieController.getTheatresForMovie(req, res, next));
 

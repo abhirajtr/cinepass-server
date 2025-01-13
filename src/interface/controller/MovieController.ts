@@ -7,6 +7,8 @@ import { GetTheatresForMovieUseCase } from "../../useCases/User/GetTheatresForMo
 import { GetUpcomingMoviesUseCase } from "../../useCases/GetUpcomingMoviesUseCase";
 import { SearchMovieUseCase } from "../../useCases/User/SearchMovieUseCase";
 import { HttpStatusCode } from "../../infrastructure/http/HttpstatusCode";
+import { CustomRequest } from "../middleware/jwtMiddleware";
+import { ReviewModel } from "../../infrastructure/models/ReviewModel";
 
 export class MovieController {
     private addMovieAdminUseCase = DIContainer.getAddMovieAdminUseCase();
@@ -56,7 +58,7 @@ export class MovieController {
 
     async getNowShowingMovies(req: Request, res: Response, next: NextFunction) {
         try {
-            let {district} = req.query;
+            let { district } = req.query;
             if (!district) district = "Ernakulam"
             const nowShowingMovies = await this.getNowShowingMoviesUseCase.execute(district as string);
             res.status(200).json(createApiResponse({ nowShowingMovies }));
@@ -107,10 +109,23 @@ export class MovieController {
             const { search } = req.query;
             if (typeof search !== 'string') {
                 res.status(HttpStatusCode.BAD_REQUEST).json(createApiErrorResponse(["Search term is required and must be a string"]));
-                return 
+                return
             }
             const movies = await this.searchMovieUseCase.execute(search);
             res.status(HttpStatusCode.ACCEPTED).json(createApiResponse(movies));
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async addReview(req: CustomRequest, res: Response, next: NextFunction) {
+        try {
+            const { movieId } = req.params;
+            const { rating, comment } = req.body;
+            const { userId } = req;
+            const review = new ReviewModel({ movieId, rating, comment, userId });
+            await review.save();
+            res.status(HttpStatusCode.OK).json(createApiResponse());
         } catch (error) {
             next(error);
         }

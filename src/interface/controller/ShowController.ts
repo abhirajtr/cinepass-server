@@ -27,6 +27,7 @@ export class ShowController {
     async getShowsByMovieId(req: Request, res: Response, next: NextFunction) {
         try {
             const { movieId } = req.params;
+            const { place } = req.query;
             const { date } = req.query;
             if (typeof date !== 'string') {
                 throw new BadRequestError("Invalid or missing date parameter");
@@ -37,7 +38,7 @@ export class ShowController {
                 throw new BadRequestError("Invalid date format");
             }
 
-            const data = await this.getShowByMovieIdUseCase.execute(movieId, parsedDate);
+            const data = await this.getShowByMovieIdUseCase.execute(movieId, parsedDate, place as string);
             res.status(HttpStatusCode.Ok).json(createApiResponse(data));
         } catch (error) {
             next(error);

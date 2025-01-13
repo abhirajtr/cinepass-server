@@ -8,7 +8,7 @@ export class GetShowsByMovieIdUseCase {
         private movieRepository: IMovieRepository,
     ) { }
 
-    async execute(movieId: string, date: Date) {
+    async execute(movieId: string, date: Date, place?: string) {
         console.log("movieId", movieId);
     
         const selectedDate = new Date(date);
