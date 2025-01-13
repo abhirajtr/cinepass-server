@@ -36,7 +36,7 @@ router.get('/getUserInfo', jwtMiddleware("regularUser"), (req, res, next) => use
 router.post('/update-name', jwtMiddleware("regularUser"), (req, res, next) => userController.updateUserName(req, res, next));
 router.put('/update-password', jwtMiddleware("regularUser"), (req, res, next) => userController.updatePassword(req, res, next));
 router.patch('/cancel-booking/:bookingId', jwtMiddleware("regularUser"), (req, res, next) => showController.cancelTicket(req, res, next));
-// router.get("/wallet",)
+router.get('/wallet', jwtMiddleware("regularUser"), (req, res, next) => userController.getWallet(req, res, next));
 
 
 

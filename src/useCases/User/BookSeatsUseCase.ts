@@ -9,6 +9,8 @@ export interface BookSeatsRequest {
     showId: string;
     userId: string;
     selectedSeats: string[];
+    amountToCharge: number;
+    useWalletBalance: boolean;
 }
 
 export interface BookSeatsResponse {
@@ -32,7 +34,7 @@ export class BookSeatsUseCase {
     async execute(request: BookSeatsRequest): Promise<BookSeatsResponse> {
         const { showId, userId, selectedSeats } = request;
         console.log("userId--->", userId);
-        
+
         // Fetch the show details
         const show = await this.showRepository.findById(showId);
         if (!show) {

@@ -11,6 +11,8 @@ import { CustomRequest } from "../middleware/jwtMiddleware";
 import { GetBookingsUseCase } from "../../useCases/User/GetBookingsUseCase";
 import QRCode from 'qrcode';
 import { CancelTicketUseCase } from "../../useCases/User/CancelTicketUseCase";
+import { GetShowBookingDetailsUseCase } from "../../useCases/theatreOwner/GetShowBookingDetailsUseCase";
+import { BookingModel } from "../../infrastructure/models/BookingModel";
 
 export class ShowController {
     private frontend_url = process.env.FRONTEND_URL
@@ -20,6 +22,7 @@ export class ShowController {
     private successBookingUseCase = new SuccessBookingUseCase(DIContainer.getShowRepository(), DIContainer.getBookingRepository(), process.env.STRIPE_SECRET_KEY!);
     private getBookingsUseCase = new GetBookingsUseCase(DIContainer.getBookingRepository());
     private cancelTicketUseCase = new CancelTicketUseCase(DIContainer.getBookingRepository(), DIContainer.getUserRepository(), DIContainer.getShowRepository(), DIContainer.getWalletRepository());
+    private getShowBookingDetailsUseCase = new GetShowBookingDetailsUseCase(DIContainer.getShowRepository());
 
     async getShowsByMovieId(req: Request, res: Response, next: NextFunction) {
         try {
@@ -58,11 +61,11 @@ export class ShowController {
             // const response = await 
             console.log(req.body);
             const userId = req.userId;
-            const { showId, selectedSeats } = req.body;
+            const { showId, selectedSeats, amountToCharge, useWalletBalance } = req.body;
             if (userId == undefined) {
                 throw new BadRequestError();
             }
-            const response = await this.bookSeatsUseCase.execute({ showId, userId, selectedSeats })
+            const response = await this.bookSeatsUseCase.execute({ showId, userId, selectedSeats, amountToCharge, useWalletBalance })
             console.log("paymentprocess-->", response);
 
             res.status(HttpStatusCode.Ok).json(createApiResponse(response));
@@ -133,6 +136,60 @@ export class ShowController {
             console.log("Cancellation requested by user:", userId, "for booking:", bookingId);
             await this.cancelTicketUseCase.execute(userId!, bookingId);
             res.status(HttpStatusCode.Ok).json(createApiResponse());
+        } catch (error) {
+            next(error);
+        }
+    }
+    async getShowBookingDetails(req: CustomRequest, res: Response, next: NextFunction) {
+        try {
+            const { showId } = req.params;
+            const showDetails = await this.getShowBookingDetailsUseCase.execute(showId);
+            res.status(HttpStatusCode.Ok).json(createApiResponse(showDetails));
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getBookedBy(req: CustomRequest, res: Response, next: NextFunction) {
+        try {
+            const { showId } = req.params;
+            const result = await BookingModel.aggregate([
+                {
+                    $match: {
+                        showId,
+                        // status: "confirmed"
+                    } // Match the booking with the specified bookingId
+                },
+                {
+                    $lookup: {
+                        from: 'users', // The name of the user collection
+                        localField: 'userId', // Field in BookingModel
+                        foreignField: 'userId', // Field in User collection
+                        as: 'userDetails' // The alias for the joined data
+                    }
+                },
+                {
+                    $unwind: '$userDetails' // Unwind the userDetails array to a single object
+                },
+                {
+                    $project: {
+                        bookingId: 1,
+                        movieTitle: 1,
+                        theatreId: 1,
+                        showTime: 1,
+                        seats: 1,
+                        price: 1,
+                        status: 1,
+                        'userDetails.name': 1, // Include specific fields from userDetails
+                        'userDetails.email': 1,
+                        createdAt: 1,
+                        updatedAt: 1
+                    }
+                }
+            ]);
+            console.log(result);
+            res.status(200).json(createApiResponse(result));
+
         } catch (error) {
             next(error);
         }

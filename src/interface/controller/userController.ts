@@ -9,6 +9,7 @@ import { BadRequestError } from "../../domain/errors/BadRequestError";
 import { HttpStatusCode } from "../../infrastructure/http/HttpstatusCode";
 import { UpdateUserNameUseCase } from "../../useCases/User/UpdateUserNameUseCase";
 import { UpdatePasswordUseCase } from "../../useCases/User/UpdatePasswordUseCase";
+import { GetWalletUseCase } from "../../useCases/User/GetWalletUseCase";
 
 export class UserController {
 
@@ -20,6 +21,7 @@ export class UserController {
     private getUserInfoUseCase = new GetUserInfoUseCase(DIContainer.getUserRepository());
     private updateUserNameUseCase = new UpdateUserNameUseCase(DIContainer.getUserRepository());
     private updatePasswordUseCase = new UpdatePasswordUseCase(DIContainer.getUserRepository());
+    private getWalletUseCase = new GetWalletUseCase(DIContainer.getWalletRepository());
 
     async signup(req: Request, res: Response, next: NextFunction) {
 
@@ -201,7 +203,9 @@ export class UserController {
 
     async getWallet(req: CustomRequest, res: Response, next: NextFunction) {
         try {
-            
+            const { userId } = req;
+            const wallet = await this.getWalletUseCase.execute(userId!);
+            res.status(HttpStatusCode.OK).json(createApiResponse(wallet));
         } catch (error) {
             next(error);
         }

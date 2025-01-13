@@ -4,7 +4,12 @@ import { WalletModel } from "../models/WalletModel";
 
 export class WalletRepository implements IWalletRepository {
     async findByUserId(userId: string): Promise<Wallet | null> {
-        return await WalletModel.findOne({ userId });
+        const wallet = await WalletModel.findOne({ userId });
+        if (wallet) {
+            wallet.transaction.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+        }
+    
+        return wallet;
     }
     createWallet(userId: string, initialBalance: number): Promise<Wallet> {
         const wallet = new WalletModel({ userId, balance: initialBalance });
